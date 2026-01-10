@@ -1,0 +1,35 @@
+@theme inline {
+  /* Fonts */
+  --font-sans: 'Momo Trust Sans', sans-serif;
+  --font-display: 'Momo Trust Display', sans-serif;
+  --font-signature: 'Momo Signature', cursive;
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+/* Hide scrollbar globally */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
