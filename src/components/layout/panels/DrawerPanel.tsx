@@ -134,7 +134,9 @@ export function DrawerPanel({
 
       {/* ===== DRAWER PANEL ===== */}
       <aside
-        className={`fixed top-0 ${positionClasses} z-50 h-screen ${widthClasses} bg-sidebar flex transform flex-col shadow-xl ${transformClasses} transition-transform duration-300 ease-in-out ${className} `}
+        className={`fixed top-0 ${positionClasses} z-50 h-screen ${widthClasses} bg-sidebar flex transform flex-col shadow-xl ${transformClasses} transition-all duration-300 ease-in-out ${
+          !isOpen ? 'invisible' : 'visible'
+        } ${className} `}
         aria-label={side === 'left' ? 'Menu điều hướng' : 'Panel phụ trợ'}
         aria-hidden={!isOpen}
       >
