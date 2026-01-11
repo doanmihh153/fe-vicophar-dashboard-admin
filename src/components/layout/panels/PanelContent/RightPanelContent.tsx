@@ -2,38 +2,28 @@
 
 /**
  * ===================================================================
- * SIDEBAR RIGHT COMPONENT - STATIC GRID COLUMN
+ * RIGHT PANEL CONTENT - NỘI DUNG SIDEBAR PHẢI
  * ===================================================================
  *
- * TRIẾT LÝ THIẾT KẾ:
- * -----------------
- * SidebarRight là một GRID COLUMN THẬT, không phải drawer overlay.
+ * Component này chứa NỘI DUNG của sidebar phải (notes/tasks/options).
+ * Được dùng bởi cả SidebarPanel (grid) và DrawerPanel (drawer).
  *
- * ĐÓNG / MỞ BẰNG THAY ĐỔI GRID COLUMNS:
- * ------------------------------------
- * - Đóng: Parent không render component này + grid chuyển từ 3 cột → 2 cột
- * - Mở: Parent render component này + grid có 3 cột
+ * ===================================================================
+ * NGUYÊN TẮC
+ * ===================================================================
+ * - KHÔNG chứa logic breakpoint
+ * - KHÔNG chứa styling cho container (wrapper)
+ * - CHỈ chứa nội dung bên trong
  *
- * TẠI SAO KHÔNG DÙNG DRAWER OVERLAY?
- * ----------------------------------
- * - SidebarRight là phần cố định của layout, không phải panel tạm thời
- * - Khi đóng, Main TỰ EXPAND chiếm toàn bộ không gian (giống IDE)
- * - Không cần animation translate hay overlay backdrop trên desktop
- *
- * COMPONENT NÀY CHỈ:
- * -----------------
- * - Render nội dung (tabs + panel content)
- * - Nhận className từ parent để style
- * - KHÔNG xử lý logic đóng/mở (parent quyết định)
- *
- * SUB-MODES:
- * ----------
+ * ===================================================================
+ * MODES
+ * ===================================================================
  * - 'notes': Panel ghi chú
  * - 'tasks': Panel công việc
  * - 'options': Panel tùy chọn cho item được chọn
  */
 
-import React, { type ReactNode } from 'react';
+import React from 'react';
 import {
   useDashboard,
   type RightPanelMode,
@@ -42,18 +32,17 @@ import { X } from 'lucide-react';
 
 /* ===== TYPES ===== */
 
-interface SidebarRightProps {
-  /** Override nội dung sidebar phải */
-  children?: ReactNode;
-  /** Class Tailwind bổ sung từ parent */
-  className?: string;
+interface RightPanelContentProps {
+  /** Có hiển thị tabs hay không */
+  showTabs?: boolean;
+  /** Có hiển thị close button hay không */
+  showCloseButton?: boolean;
 }
 
 /* ===== SUB-COMPONENTS ===== */
 
 /**
  * Panel Ghi Chú
- * Hiển thị danh sách ghi chú và nút thêm mới
  */
 function NotesPanel() {
   return (
@@ -80,7 +69,6 @@ function NotesPanel() {
 
 /**
  * Panel Công Việc
- * Hiển thị danh sách task với checkbox
  */
 function TasksPanel() {
   return (
@@ -106,7 +94,6 @@ function TasksPanel() {
 
 /**
  * Panel Tùy Chọn
- * Hiển thị options cho item được chọn từ Main Content
  */
 function OptionsPanel() {
   const { selectedItem, clearSelection } = useDashboard();
@@ -155,7 +142,7 @@ function OptionsPanel() {
 /**
  * Render panel content dựa trên mode
  */
-function PanelContent({ mode }: { mode: RightPanelMode }) {
+function PanelContentByMode({ mode }: { mode: RightPanelMode }) {
   switch (mode) {
     case 'notes':
       return <NotesPanel />;
@@ -168,85 +155,82 @@ function PanelContent({ mode }: { mode: RightPanelMode }) {
   }
 }
 
-/* ===== COMPONENT CHÍNH ===== */
+/* ===== COMPONENT ===== */
 
-export function SidebarRight({ children, className = '' }: SidebarRightProps) {
-  const { rightPanelMode, setRightPanelMode, toggleRightPanel } =
-    useDashboard();
+export function RightPanelContent({
+  showTabs = true,
+  showCloseButton = true,
+}: RightPanelContentProps) {
+  const { rightPanelMode, setRightPanelMode, toggleRight } = useDashboard();
 
-  /**
-   * STATIC GRID COLUMN
-   * ------------------
-   * Component này được render trong grid column thứ 3.
-   * Không có animation - chỉ render nội dung.
-   *
-   * ĐÓNG/MỞ được xử lý bởi parent:
-   * - Parent quyết định có render component này không
-   * - Parent thay đổi grid-cols tương ứng
-   */
   return (
-    <aside
-      className={`flex flex-col ${className}`}
-      aria-label="Sidebar phụ trợ"
-    >
-      {/* ===== HEADER: Nút đóng + Tabs ===== */}
-      <div className="border-border flex items-center border-b">
-        {/* Nút đóng sidebar */}
-        <button
-          onClick={toggleRightPanel}
-          className="text-muted-foreground hover:bg-accent hover:text-foreground p-3 transition-colors"
-          aria-label="Đóng panel"
-        >
-          <X className="h-5 w-5" />
-        </button>
+    <>
+      {/* ===== HEADER: Tabs + Close Button ===== */}
+      {(showTabs || showCloseButton) && (
+        <div className="border-border flex items-center border-b">
+          {/* Close button (optional) */}
+          {showCloseButton && (
+            <button
+              onClick={toggleRight}
+              className="text-muted-foreground hover:bg-accent hover:text-foreground p-3 transition-colors"
+              aria-label="Đóng panel"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
 
-        {/* Tab Notes */}
-        <button
-          onClick={() => setRightPanelMode('notes')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors ${
-            rightPanelMode === 'notes'
-              ? 'text-primary border-primary border-b-2'
-              : 'text-muted-foreground hover:text-foreground'
-          } `}
-          aria-label="Ghi chú"
-        >
-          📝
-        </button>
+          {/* Tab Notes */}
+          {showTabs && (
+            <>
+              <button
+                onClick={() => setRightPanelMode('notes')}
+                className={`flex-1 py-3 text-sm font-medium transition-colors ${
+                  rightPanelMode === 'notes'
+                    ? 'text-primary border-primary border-b-2'
+                    : 'text-muted-foreground hover:text-foreground'
+                } `}
+                aria-label="Ghi chú"
+              >
+                📝
+              </button>
 
-        {/* Tab Tasks */}
-        <button
-          onClick={() => setRightPanelMode('tasks')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors ${
-            rightPanelMode === 'tasks'
-              ? 'text-primary border-primary border-b-2'
-              : 'text-muted-foreground hover:text-foreground'
-          } `}
-          aria-label="Công việc"
-        >
-          ✅
-        </button>
+              {/* Tab Tasks */}
+              <button
+                onClick={() => setRightPanelMode('tasks')}
+                className={`flex-1 py-3 text-sm font-medium transition-colors ${
+                  rightPanelMode === 'tasks'
+                    ? 'text-primary border-primary border-b-2'
+                    : 'text-muted-foreground hover:text-foreground'
+                } `}
+                aria-label="Công việc"
+              >
+                ✅
+              </button>
 
-        {/* Tab Options */}
-        <button
-          onClick={() => setRightPanelMode('options')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors ${
-            rightPanelMode === 'options'
-              ? 'text-primary border-primary border-b-2'
-              : 'text-muted-foreground hover:text-foreground'
-          } `}
-          aria-label="Tùy chọn"
-        >
-          ⚙️
-        </button>
-      </div>
+              {/* Tab Options */}
+              <button
+                onClick={() => setRightPanelMode('options')}
+                className={`flex-1 py-3 text-sm font-medium transition-colors ${
+                  rightPanelMode === 'options'
+                    ? 'text-primary border-primary border-b-2'
+                    : 'text-muted-foreground hover:text-foreground'
+                } `}
+                aria-label="Tùy chọn"
+              >
+                ⚙️
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
-      {/* ===== PANEL CONTENT: Scroll độc lập ===== */}
+      {/* ===== PANEL CONTENT ===== */}
       <div className="flex-1 overflow-y-auto">
-        {children || <PanelContent mode={rightPanelMode} />}
+        <PanelContentByMode mode={rightPanelMode} />
       </div>
-    </aside>
+    </>
   );
 }
 
-/* ===== EXPORT MẶC ĐỊNH ===== */
-export default SidebarRight;
+/* ===== DEFAULT EXPORT ===== */
+export default RightPanelContent;
