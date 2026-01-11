@@ -1,13 +1,56 @@
+/**
+ * ===================================================================
+ * DASHBOARD HOME PAGE
+ * ===================================================================
+ *
+ * Trang chủ của Dashboard, hiển thị tại URL: /
+ *
+ * ===================================================================
+ * ROUTE MAPPING
+ * ===================================================================
+ *
+ * File: src/app/(dashboard)/page.tsx
+ * URL: / (root)
+ *
+ * Route group (dashboard) không ảnh hưởng URL.
+ * File page.tsx trong (dashboard)/ sẽ map tới root URL.
+ *
+ * ===================================================================
+ * LAYOUT INHERITANCE
+ * ===================================================================
+ *
+ * Page này được wrap bởi:
+ * 1. RootLayout (providers)
+ * 2. DashboardGroupLayout (DashboardLayout)
+ *
+ * Do đó tự động có:
+ * - SidebarLeft (navigation)
+ * - Header
+ * - MainContent (nội dung page này)
+ * - SidebarRight (notes/tasks)
+ */
+
 import { ArrowRight, CheckCircle2, Terminal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggler } from '@/components/ui/DarkTheme';
 
-export default function Home() {
+/**
+ * Dashboard Home Page Component
+ *
+ * Hiển thị welcome message và feature highlights.
+ * Đây là placeholder - có thể thay bằng dashboard stats, charts, etc.
+ */
+export default function DashboardHomePage() {
   return (
-    <div className="bg-background text-foreground selection:bg-primary selection:text-primary-foreground relative flex min-h-screen flex-col items-center justify-center">
+    <div className="bg-background text-foreground selection:bg-primary selection:text-primary-foreground relative flex min-h-full flex-col items-center justify-center">
+      {/*
+       * Theme Toggler
+       * Đặt góc phải trên để dễ access
+       */}
       <div className="absolute top-4 right-4">
         <ThemeToggler />
       </div>
+
       <div className="container max-w-4xl px-4 py-16">
         <main className="flex flex-col items-center gap-8 text-center">
           {/* Badge */}
@@ -30,7 +73,7 @@ export default function Home() {
           {/* Action Buttons */}
           <div className="flex flex-col gap-4 sm:flex-row">
             <a
-              href="#"
+              href="/tasks"
               className={cn(
                 'inline-flex h-12 items-center justify-center gap-2 rounded-full',
                 'bg-primary text-primary-foreground px-8 text-sm font-medium',
@@ -40,7 +83,7 @@ export default function Home() {
               Get Started <ArrowRight className="h-4 w-4" />
             </a>
             <a
-              href="#"
+              href="/settings"
               className={cn(
                 'inline-flex h-12 items-center justify-center gap-2 rounded-full',
                 'border-input bg-background border px-8 text-sm font-medium',
