@@ -29,7 +29,7 @@ export function PromoCard({
   icon,
 }: PromoCardProps) {
   return (
-    <div className="from-primary/90 to-primary text-primary-foreground relative overflow-hidden rounded-xl bg-gradient-to-br p-4">
+    <div className="from-primary/90 to-primary text-primary-foreground relative overflow-hidden rounded-xl bg-linear-to-br p-4">
       {/* Decorative background shapes */}
       <div className="absolute -top-6 -right-6 h-24 w-24 rounded-full bg-white/10" />
       <div className="absolute -right-4 -bottom-4 h-16 w-16 rounded-full bg-white/10" />
