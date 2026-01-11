@@ -4,12 +4,16 @@
  * ===================================================================
  *
  * Container cho nội dung chính của mỗi page.
- * Đây là nơi render {children} từ các page components.
+ * Sử dụng THUẦN TailwindCSS utility classes.
  *
- * Đặc điểm:
- * - Scroll độc lập (không ảnh hưởng sidebar và header)
- * - Chiếm toàn bộ không gian còn lại sau header
- * - Có padding mặc định
+ * CHỨC NĂNG:
+ * - Scroll độc lập (overflow-y-auto)
+ * - Chiếm toàn bộ không gian còn lại sau header (flex-1)
+ * - Padding mặc định có thể tắt
+ *
+ * QUAN TRỌNG:
+ * - overflow-y-auto: Scroll độc lập, không ảnh hưởng sidebar/header
+ * - overscroll-contain: Ngăn scroll chain đến parent
  */
 
 import React, { type ReactNode } from 'react';
@@ -19,7 +23,7 @@ import React, { type ReactNode } from 'react';
 interface MainContentProps {
   /** Nội dung page (children từ layout) */
   children: ReactNode;
-  /** Class CSS bổ sung */
+  /** Class Tailwind bổ sung (từ parent) */
   className?: string;
   /** Tắt padding mặc định */
   noPadding?: boolean;
@@ -34,7 +38,7 @@ export function MainContent({
 }: MainContentProps) {
   return (
     <main
-      className={`main-content ${noPadding ? 'p-0!' : ''} ${className}`}
+      className={`bg-background flex-1 overflow-x-hidden overflow-y-auto overscroll-contain ${noPadding ? '' : 'p-4 md:p-6'} ${className} `}
       role="main"
       aria-label="Nội dung chính"
     >

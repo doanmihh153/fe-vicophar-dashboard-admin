@@ -2,17 +2,47 @@
 
 /**
  * ===================================================================
- * DASHBOARD CONTEXT
+ * DASHBOARD CONTEXT - PANEL STATE (Device-Agnostic)
  * ===================================================================
  *
- * Context này quản lý state chung cho toàn bộ Dashboard layout:
- * - Trạng thái collapse/expand của sidebar trái
- * - Trạng thái hiển thị và mode của sidebar phải
- * - Selected item để tương tác giữa Main Content và Sidebar phải
+ * Context này quản lý STATE cho các panels của Dashboard.
+ * Đây là lớp PANEL STATE trong kiến trúc 3 lớp.
  *
- * Sử dụng:
- * - Wrap layout với <DashboardProvider>
- * - Trong component con, dùng hook useDashboard() để truy cập state
+ * ===================================================================
+ * NGUYÊN TẮC QUAN TRỌNG
+ * ===================================================================
+ * 1. STATE KHÔNG BIẾT VỀ DEVICE
+ *    - isLeftOpen, isRightOpen là boolean đơn giản
+ *    - KHÔNG có logic if/else cho mobile/desktop
+ *    - KHÔNG check window.innerWidth
+ *
+ * 2. CHỈ QUẢN LÝ STATE, KHÔNG QUYẾT ĐỊNH RENDER
+ *    - Context chỉ cho biết "panel có đang open không?"
+ *    - KHÔNG quyết định "render drawer hay grid?"
+ *    - Việc render là trách nhiệm của Layout Controller
+ *
+ * 3. DÙNG CHUNG CHO MỌI THIẾT BỊ
+ *    - State được chia sẻ giữa grid column và drawer
+ *    - Toggle 1 lần, cả 2 mode đều phản ánh
+ *
+ * ===================================================================
+ * SO SÁNH VỚI KIẾN TRÚC CŨ
+ * ===================================================================
+ * CŨ (SAI):
+ * - toggleLeftSidebar() check window.innerWidth
+ * - Có 2 state riêng: isLeftSidebarCollapsed (desktop) + isLeftSidebarOpen (mobile)
+ *
+ * MỚI (ĐÚNG):
+ * - toggleLeft() chỉ toggle boolean
+ * - 1 state duy nhất: isLeftOpen (device-agnostic)
+ *
+ * ===================================================================
+ * CẤU TRÚC STATE
+ * ===================================================================
+ * - isLeftOpen: boolean - Sidebar trái có đang mở không
+ * - isRightOpen: boolean - Sidebar phải có đang mở không
+ * - leftCollapsed: boolean - Sidebar trái có đang thu gọn (icon-only) không
+ * - rightPanelMode: 'notes' | 'tasks' | 'options' - Mode hiển thị của right panel
  */
 
 import React, {
@@ -30,31 +60,74 @@ import React, {
  * - 'notes': Hiển thị panel ghi chú
  * - 'tasks': Hiển thị panel công việc
  * - 'options': Hiển thị tùy chọn cho item được chọn
- * - null: Ẩn sidebar phải
  */
-export type RightPanelMode = 'notes' | 'tasks' | 'options' | null;
+export type RightPanelMode = 'notes' | 'tasks' | 'options';
 
 /**
  * Interface định nghĩa context value
+ * LƯU Ý: Tất cả state đều device-agnostic
  */
 interface DashboardContextType {
   /* ===== SIDEBAR TRÁI ===== */
-  /** Trạng thái sidebar trái có đang thu gọn không */
-  isLeftSidebarCollapsed: boolean;
-  /** Toggle trạng thái collapse của sidebar trái */
-  toggleLeftSidebar: () => void;
-  /** Set trạng thái collapse cụ thể */
-  setLeftSidebarCollapsed: (collapsed: boolean) => void;
+  /**
+   * Sidebar trái có đang mở không
+   * - true: Hiển thị (dù là grid column hay drawer)
+   * - false: Ẩn (dù là grid column hay drawer)
+   */
+  isLeftOpen: boolean;
+
+  /**
+   * Toggle trạng thái open/close của sidebar trái
+   * Device-agnostic - không biết đang ở mobile hay desktop
+   */
+  toggleLeft: () => void;
+
+  /**
+   * Set trạng thái open cụ thể
+   */
+  setLeftOpen: (open: boolean) => void;
+
+  /**
+   * Sidebar trái có đang thu gọn (chỉ hiện icon) không
+   * CHỈ áp dụng khi sidebar đang mở trên desktop
+   */
+  isLeftCollapsed: boolean;
+
+  /**
+   * Toggle trạng thái collapsed
+   */
+  toggleLeftCollapse: () => void;
+
+  /**
+   * Set trạng thái collapsed cụ thể
+   */
+  setLeftCollapsed: (collapsed: boolean) => void;
 
   /* ===== SIDEBAR PHẢI ===== */
-  /** Mode hiện tại của sidebar phải */
+  /**
+   * Sidebar phải có đang mở không
+   */
+  isRightOpen: boolean;
+
+  /**
+   * Toggle trạng thái open/close của sidebar phải
+   */
+  toggleRight: () => void;
+
+  /**
+   * Set trạng thái open cụ thể
+   */
+  setRightOpen: (open: boolean) => void;
+
+  /**
+   * Mode hiện tại của sidebar phải
+   */
   rightPanelMode: RightPanelMode;
-  /** Set mode cho sidebar phải */
+
+  /**
+   * Set mode cho sidebar phải
+   */
   setRightPanelMode: (mode: RightPanelMode) => void;
-  /** Kiểm tra sidebar phải có đang mở không */
-  isRightPanelOpen: boolean;
-  /** Toggle sidebar phải (mở/đóng) */
-  toggleRightPanel: () => void;
 
   /* ===== SELECTED ITEM ===== */
   /**
@@ -62,10 +135,29 @@ interface DashboardContextType {
    * Sử dụng để sidebar phải hiển thị thông tin/options tương ứng
    */
   selectedItem: unknown | null;
-  /** Set item được chọn */
+
+  /**
+   * Set item được chọn
+   */
   setSelectedItem: (item: unknown | null) => void;
-  /** Clear item được chọn và đóng options panel */
+
+  /**
+   * Clear item được chọn
+   */
   clearSelection: () => void;
+
+  /* ===== BACKWARD COMPATIBILITY ===== */
+  /**
+   * Các aliases để tương thích với code cũ
+   * TODO: Dần dần migrate và xóa
+   */
+  isLeftSidebarCollapsed: boolean;
+  toggleLeftSidebar: () => void;
+  setLeftSidebarCollapsed: (collapsed: boolean) => void;
+  isLeftSidebarOpen: boolean;
+  setLeftSidebarOpen: (open: boolean) => void;
+  isRightPanelOpen: boolean;
+  toggleRightPanel: () => void;
 }
 
 /* ===== CONTEXT ===== */
@@ -79,72 +171,128 @@ const DashboardContext = createContext<DashboardContextType | undefined>(
 interface DashboardProviderProps {
   children: ReactNode;
   /**
-   * Trạng thái collapse mặc định của sidebar trái
-   * @default false
+   * Sidebar trái mặc định mở hay đóng
+   * @default true (mở)
    */
-  defaultCollapsed?: boolean;
+  defaultLeftOpen?: boolean;
+  /**
+   * Sidebar trái mặc định thu gọn hay mở rộng
+   * @default false (mở rộng)
+   */
+  defaultLeftCollapsed?: boolean;
+  /**
+   * Sidebar phải mặc định mở hay đóng
+   * @default true (mở)
+   */
+  defaultRightOpen?: boolean;
   /**
    * Mode mặc định của sidebar phải
-   * @default null (ẩn)
+   * @default 'notes'
    */
   defaultRightPanelMode?: RightPanelMode;
 }
 
 export function DashboardProvider({
   children,
-  defaultCollapsed = false,
-  defaultRightPanelMode = null,
+  defaultLeftOpen = true,
+  defaultLeftCollapsed = false,
+  defaultRightOpen = true,
+  defaultRightPanelMode = 'notes',
 }: DashboardProviderProps) {
-  /* ----- State cho Sidebar trái ----- */
-  const [isLeftSidebarCollapsed, setLeftSidebarCollapsed] =
-    useState(defaultCollapsed);
+  /* ===== STATE ===== */
 
-  /* ----- State cho Sidebar phải ----- */
+  /**
+   * Sidebar trái: open/close
+   * Device-agnostic - áp dụng cho cả grid và drawer
+   */
+  const [isLeftOpen, setLeftOpen] = useState(defaultLeftOpen);
+
+  /**
+   * Sidebar trái: collapsed (icon-only) khi đang open
+   * CHỈ có ý nghĩa khi isLeftOpen = true trên desktop
+   */
+  const [isLeftCollapsed, setLeftCollapsed] = useState(defaultLeftCollapsed);
+
+  /**
+   * Sidebar phải: open/close
+   * Device-agnostic - áp dụng cho cả grid và drawer
+   */
+  const [isRightOpen, setRightOpen] = useState(defaultRightOpen);
+
+  /**
+   * Sidebar phải: mode hiển thị
+   */
   const [rightPanelMode, setRightPanelMode] = useState<RightPanelMode>(
     defaultRightPanelMode
   );
 
-  /* ----- State cho Selected Item ----- */
+  /**
+   * Selected item từ Main Content
+   */
   const [selectedItem, setSelectedItem] = useState<unknown | null>(null);
 
   /* ===== CALLBACKS ===== */
 
-  /** Toggle sidebar trái */
-  const toggleLeftSidebar = useCallback(() => {
-    setLeftSidebarCollapsed((prev) => !prev);
+  /**
+   * Toggle sidebar trái open/close
+   * KHÔNG check device - chỉ toggle boolean đơn giản
+   */
+  const toggleLeft = useCallback(() => {
+    setLeftOpen((prev) => !prev);
   }, []);
 
-  /** Tính toán sidebar phải có đang mở không */
-  const isRightPanelOpen = rightPanelMode !== null;
-
-  /** Toggle sidebar phải (mở notes nếu đang đóng, đóng nếu đang mở) */
-  const toggleRightPanel = useCallback(() => {
-    setRightPanelMode((prev) => (prev === null ? 'notes' : null));
+  /**
+   * Toggle sidebar trái collapsed/expanded
+   */
+  const toggleLeftCollapse = useCallback(() => {
+    setLeftCollapsed((prev) => !prev);
   }, []);
 
-  /** Clear selection và đóng options panel */
+  /**
+   * Toggle sidebar phải open/close
+   */
+  const toggleRight = useCallback(() => {
+    setRightOpen((prev) => !prev);
+  }, []);
+
+  /**
+   * Clear selection
+   */
   const clearSelection = useCallback(() => {
     setSelectedItem(null);
-    // Nếu đang ở mode options, chuyển về null hoặc mode trước đó
-    setRightPanelMode((prev) => (prev === 'options' ? null : prev));
   }, []);
 
   /* ===== VALUE ===== */
 
   const value: DashboardContextType = {
-    // Sidebar trái
-    isLeftSidebarCollapsed,
-    toggleLeftSidebar,
-    setLeftSidebarCollapsed,
-    // Sidebar phải
+    // Sidebar trái (new API)
+    isLeftOpen,
+    toggleLeft,
+    setLeftOpen,
+    isLeftCollapsed,
+    toggleLeftCollapse,
+    setLeftCollapsed,
+
+    // Sidebar phải (new API)
+    isRightOpen,
+    toggleRight,
+    setRightOpen,
     rightPanelMode,
     setRightPanelMode,
-    isRightPanelOpen,
-    toggleRightPanel,
+
     // Selected item
     selectedItem,
     setSelectedItem,
     clearSelection,
+
+    // Backward compatibility aliases
+    isLeftSidebarCollapsed: isLeftCollapsed,
+    toggleLeftSidebar: toggleLeft,
+    setLeftSidebarCollapsed: setLeftCollapsed,
+    isLeftSidebarOpen: isLeftOpen,
+    setLeftSidebarOpen: setLeftOpen,
+    isRightPanelOpen: isRightOpen,
+    toggleRightPanel: toggleRight,
   };
 
   return (
@@ -163,8 +311,8 @@ export function DashboardProvider({
  * @example
  * ```tsx
  * function MyComponent() {
- *   const { isLeftSidebarCollapsed, toggleLeftSidebar } = useDashboard();
- *   return <button onClick={toggleLeftSidebar}>Toggle</button>;
+ *   const { isLeftOpen, toggleLeft } = useDashboard();
+ *   return <button onClick={toggleLeft}>Toggle</button>;
  * }
  * ```
  */

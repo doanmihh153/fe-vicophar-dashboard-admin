@@ -6,27 +6,38 @@
  * ===================================================================
  *
  * Header cố định phía trên main content area.
- * Chứa các thành phần như: breadcrumb, search, actions, user menu...
  *
- * Đặc điểm:
- * - Chiều cao cố định (--header-height)
- * - Không scroll theo content
- * - Có thể chứa các action buttons
+ * ===================================================================
+ * BUTTON TOGGLE SIDEBAR (QUAN TRỌNG)
+ * ===================================================================
+ *
+ * BUTTON TOGGLE SIDEBARRIGHT:
+ * - PHẢI nằm trong Header (không nằm trong SidebarRight)
+ * - Vì SidebarRight trên Desktop bị UNMOUNT khi close
+ * - Nếu button trong SidebarRight → khi close → button mất → không mở lại được
+ *
+ * BUTTON HAMBURGER (SIDEBARLEFT):
+ * - Chỉ hiện trên Tablet/Mobile (< lg = 1024px)
+ * - Trên Desktop, SidebarLeft có nút collapse riêng bên trong
+ * - Vì SidebarLeft trên Desktop KHÔNG BAO GIỜ bị unmount (chỉ collapse)
+ *
+ * ===================================================================
+ * BREAKPOINT SYNC
+ * ===================================================================
+ * - lg:hidden: Ẩn hamburger từ 1024px trở lên (Desktop)
+ * - Đồng bộ với matchMedia('(min-width: 1024px)') trong DashboardLayout
  */
 
 import React, { type ReactNode } from 'react';
 import { useDashboard } from '@/components/providers/DashboardContext';
+import { Menu, PanelRightOpen, PanelRightClose } from 'lucide-react';
 
 /* ===== TYPES ===== */
 
 interface HeaderProps {
-  /** Nội dung breadcrumb hoặc title */
   title?: string;
-  /** Các action buttons bên phải */
   actions?: ReactNode;
-  /** Override toàn bộ nội dung header */
   children?: ReactNode;
-  /** Class CSS bổ sung */
   className?: string;
 }
 
@@ -38,81 +49,82 @@ export function Header({
   children,
   className = '',
 }: HeaderProps) {
-  const { toggleLeftSidebar, toggleRightPanel, isRightPanelOpen } =
-    useDashboard();
+  const { toggleLeft, toggleRight, isRightOpen } = useDashboard();
 
-  // Nếu có children, render children thay vì layout mặc định
+  // Override mode
   if (children) {
     return (
-      <header className={`dashboard-header ${className}`}>{children}</header>
+      <header
+        className={`border-border bg-background flex h-16 items-center justify-between border-b px-4 ${className}`}
+      >
+        {children}
+      </header>
     );
   }
 
   return (
-    <header className={`dashboard-header ${className}`}>
-      {/* Bên trái: Toggle sidebar + Title/Breadcrumb */}
-      <div className="flex items-center gap-4">
-        {/* Nút toggle sidebar trái (hiện trên mobile/tablet) */}
+    <header
+      className={`border-border bg-background flex h-16 items-center justify-between border-b px-4 ${className}`}
+    >
+      {/* ===== BÊN TRÁI: Hamburger + Title ===== */}
+      <div className="flex items-center gap-3">
+        {/**
+         * NÚT HAMBURGER MENU
+         * - lg:hidden: Chỉ hiện trên Tablet/Mobile (< 1024px)
+         * - Dùng để toggle SidebarLeft drawer
+         *
+         * Tại sao lg:hidden mà không phải md:hidden?
+         * - Breakpoint Desktop là 1024px (lg) theo thiết kế
+         * - Dưới 1024px, SidebarLeft chuyển sang drawer mode
+         * - Cần hamburger để mở drawer
+         */}
         <button
-          onClick={toggleLeftSidebar}
+          onClick={toggleLeft}
           className="hover:bg-accent rounded-lg p-2 transition-colors lg:hidden"
-          aria-label="Toggle sidebar trái"
+          aria-label="Mở menu điều hướng"
         >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
+          <Menu className="h-5 w-5" />
         </button>
 
-        {/* Title hoặc Breadcrumb */}
+        {/* Title */}
         {title && (
           <h1 className="font-display truncate text-lg font-medium">{title}</h1>
         )}
       </div>
 
-      {/* Bên phải: Actions */}
-      <div className="ml-auto flex items-center gap-2">
-        {/* Custom actions */}
+      {/* ===== BÊN PHẢI: Actions + Toggle SidebarRight ===== */}
+      <div className="flex items-center gap-2">
         {actions}
 
-        {/* Nút toggle sidebar phải */}
+        {/**
+         * NÚT TOGGLE SIDEBAR PHẢI
+         * - LUÔN hiện trên tất cả breakpoints
+         * - Vì SidebarRight có thể bị unmount (trên Desktop khi close)
+         * - Button PHẢI nằm ngoài SidebarRight để user có thể mở lại
+         *
+         * FLOW:
+         * User click button → toggleRight() → isRightOpen thay đổi
+         * → DashboardLayout re-render → SidebarRight mount/unmount
+         */}
         <button
-          onClick={toggleRightPanel}
+          onClick={toggleRight}
           className={`rounded-lg p-2 transition-colors ${
-            isRightPanelOpen
+            isRightOpen
               ? 'bg-primary text-primary-foreground'
-              : 'hover:bg-accent'
-          }`}
-          aria-label="Toggle sidebar phải"
-          aria-pressed={isRightPanelOpen}
+              : 'hover:bg-accent text-muted-foreground hover:text-foreground'
+          } `}
+          aria-label={isRightOpen ? 'Đóng panel phải' : 'Mở panel phải'}
+          aria-pressed={isRightOpen}
         >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h8m-8 6h16"
-            />
-          </svg>
+          {isRightOpen ? (
+            <PanelRightClose className="h-5 w-5" />
+          ) : (
+            <PanelRightOpen className="h-5 w-5" />
+          )}
         </button>
       </div>
     </header>
   );
 }
 
-/* ===== EXPORT MẶC ĐỊNH ===== */
 export default Header;
