@@ -26,5 +26,5 @@ export {
 export { Header } from './Header';
 export { MainContent } from './MainContent';
 
-// Legacy components (giữ lại cho backward compatibility)
-export { SidebarRight } from './SidebarRight';
+// Right Panel wrapper (new location)
+export { SidebarRight } from './panels/PanelContent/RightPanel';

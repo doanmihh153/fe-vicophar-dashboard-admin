@@ -46,8 +46,8 @@ export function NavItem({
         isCollapsed ? 'justify-center gap-0' : 'gap-2'
       } ${
         isActive
-          ? 'bg-hover-card text-sidebar-text-heading cursor-default font-semibold'
-          : 'text-muted-foreground hover:bg-hover-card hover:text-accent-foreground'
+          ? 'bg-hover-card! text-sidebar-text-heading cursor-default font-semibold'
+          : 'text-muted-foreground hover:bg-hover-card! hover:text-accent-foreground'
       } `}
       /*
        * MIN-WIDTH để giữ click area khi collapsed.

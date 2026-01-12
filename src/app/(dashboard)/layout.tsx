@@ -61,6 +61,7 @@
  */
 
 import { DashboardLayout } from '@/components/layout';
+import { RightPanelProvider } from '@/components/providers/RightPanelContext';
 
 /**
  * Props interface cho layout
@@ -74,21 +75,14 @@ interface DashboardGroupLayoutProps {
  * Dashboard Group Layout
  *
  * Wrap DashboardLayout cho tất cả pages trong (dashboard)/*
- * Không cần config gì thêm - DashboardLayout tự xử lý responsive.
+ * RightPanelProvider cho phép mỗi page custom sidebar phải riêng.
  */
 export default function DashboardGroupLayout({
   children,
 }: DashboardGroupLayoutProps) {
   return (
-    <DashboardLayout
-      /*
-       * headerTitle: Title mặc định cho header
-       * Có thể override trong từng page bằng cách sử dụng
-       * DashboardLayout trực tiếp với props khác
-       */
-      headerTitle="Dashboard"
-    >
-      {children}
-    </DashboardLayout>
+    <RightPanelProvider>
+      <DashboardLayout headerTitle="Dashboard">{children}</DashboardLayout>
+    </RightPanelProvider>
   );
 }
