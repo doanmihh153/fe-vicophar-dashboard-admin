@@ -238,51 +238,28 @@ export function DashboardLayout({
 
   /*
    * =================================================================
-   * TÍNH TOÁN GRID COLUMNS
+   * TÍNH TOÁN GRID COLUMNS (CSS VARIABLES)
    * =================================================================
    *
-   * Hàm này trả về Tailwind class cho grid-template-columns.
+   * Fix FOUC (Flash of Unstyled Content):
+   * Thay vì dùng JS để conditional render (gây chớp khi hydration),
+   * ta dùng CSS Variables + Media Queries.
    *
-   * DESKTOP (isDesktop = true):
-   * ---------------------------
-   * Luôn trả về 3 cột với arbitrary values:
-   * - Cột 1 (Left): 260px khi expanded, 64px khi collapsed
-   * - Cột 2 (Main): 1fr (chiếm phần còn lại)
-   * - Cột 3 (Right): 320px khi open, 0px khi closed
+   * --left-width:  Width của sidebar trái (260px hoặc 72px)
+   * --right-width: Width của sidebar phải (320px hoặc 0px)
    *
-   * 4 TRẠNG THÁI HỢP LỆ:
-   * 1. LEFT OPEN   + RIGHT OPEN   → grid-cols-[260px_1fr_320px]
-   * 2. LEFT CLOSE  + RIGHT OPEN   → grid-cols-[64px_1fr_320px]
-   * 3. LEFT OPEN   + RIGHT CLOSE  → grid-cols-[260px_1fr_0px]
-   * 4. LEFT CLOSE  + RIGHT CLOSE  → grid-cols-[64px_1fr_0px]
-   *
-   * ⚠️ BẮT BUỘC:
-   * - Dùng 0px (KHÔNG PHẢI 0) - "0" không phải giá trị hợp lệ
-   * - Không dùng auto - gây unstable width
-   * - Không bỏ cột - thay đổi grid structure
-   *
-   * TABLET/MOBILE (isDesktop = false):
-   * ------------------------------------
-   * Trả về grid-cols-1 (1 cột duy nhất cho Main).
-   * Sidebars render bằng DrawerPanel ở ngoài grid.
+   * Layout Logic:
+   * - Mobile: grid-cols-1 (Mặc định)
+   * - Desktop (lg:): grid-cols-[var(--left-width)_1fr_var(--right-width)]
    */
-  const getGridColumns = (): string => {
-    // Tablet/Mobile: Layout 1 cột
-    if (!isDesktop) {
-      return 'grid-cols-1';
-    }
+  const leftWidth = isLeftCollapsed ? '72px' : '260px';
+  const rightWidth = isRightOpen ? '320px' : '0px';
 
-    // Desktop: Luôn 3 cột với giá trị EXPLICIT
-    // Left width: 260px expanded, 64px collapsed
-    const leftWidth = isLeftCollapsed ? '64px' : '260px';
-
-    // Right width: 320px open, 0px closed
-    // ⚠️ PHẢI LÀ 0px, KHÔNG PHẢI 0
-    const rightWidth = isRightOpen ? '320px' : '0px';
-
-    // Trả về Tailwind arbitrary value class
-    return `grid-cols-[${leftWidth}_1fr_${rightWidth}]`;
-  };
+  // Cast style to any to avoid TypeScript error with custom properties
+  const gridStyle = {
+    '--left-width': leftWidth,
+    '--right-width': rightWidth,
+  } as React.CSSProperties;
 
   /*
    * =================================================================
@@ -293,59 +270,35 @@ export function DashboardLayout({
     <>
       {/*
        * ===============================================================
-       * GRID LAYOUT CONTAINER
+       * APP FRAME WRAPPER
        * ===============================================================
-       *
-       * Root container sử dụng CSS Grid.
-       *
-       * Classes:
-       * - grid: Enable CSS Grid
-       * - h-screen w-screen: Full viewport size
-       * - overflow-hidden: Prevent body scroll
-       * - ${getGridColumns()}: Dynamic grid columns
-       * - transition-all duration-300: Smooth animation khi thay đổi
        */}
-      <div
-        className={`grid h-screen w-screen overflow-hidden ${getGridColumns()} transition-all duration-300 ease-in-out ${className} `}
-      >
+      <div className="bg-background flex h-screen w-full justify-center overflow-hidden">
         {/*
-         * =============================================================
-         * CỘT 1: SIDEBAR LEFT (Desktop Grid Mode)
-         * =============================================================
+         * ===============================================================
+         * CORE GRID LAYOUT
+         * ===============================================================
          *
-         * ĐIỀU KIỆN RENDER: isDesktop = true
-         * Trên Tablet/Mobile, sidebar render bằng DrawerPanel ở dưới.
-         *
-         * BEHAVIOR:
-         * - LUÔN render khi isDesktop (không unmount)
-         * - Width thay đổi theo grid-template-columns
-         * - Collapse = đổi width column (260px → 64px)
-         * - Content bên trong ẩn bằng opacity, KHÔNG unmount
-         *
-         * TẠI SAO KHÔNG UNMOUNT?
-         * ----------------------
-         * Nếu unmount SidebarLeft khi collapsed:
-         * - Grid mất 1 item
-         * - MainContent nhảy sang vị trí của SidebarLeft
-         * - Layout vỡ hoàn toàn
-         *
-         * CLASSES:
-         * - bg-sidebar: Background từ theme
-         * - border-sidebar-border: Border color từ theme
-         * - border-r: Border bên phải (ngăn cách với Main)
-         * - h-screen: Full height
-         * - overflow-hidden: Ẩn content tràn khi collapsed
-         * - transition-all duration-300: Animation mượt
+         * - Mobile: grid-cols-1
+         * - Desktop (lg): 3 cột dựa trên CSS variables
          */}
-        {isDesktop && (
-          <aside className="bg-sidebar border-sidebar-border flex h-screen flex-col overflow-hidden border-r transition-all duration-300">
+        <div
+          className={`grid h-full w-full max-w-[1920px] grid-cols-1 overflow-hidden transition-all duration-300 ease-in-out lg:grid-cols-[var(--left-width)_1fr_var(--right-width)] ${className} `}
+          style={gridStyle}
+        >
+          {/*
+           * =============================================================
+           * CỘT 1: SIDEBAR LEFT
+           * =============================================================
+           *
+           * - Mobile: hidden (Dùng Drawer)
+           * - Desktop (lg): flex (Hiện trong Grid)
+           *
+           * LUÔN RENDER HTML (Server Side) -> Tránh layout shift
+           */}
+          <aside className="bg-sidebar m-2 hidden h-[calc(100vh-16px)] flex-col overflow-hidden rounded-2xl transition-all duration-300 lg:flex">
             {/*
              * Custom sidebar content hoặc LeftPanelContent mặc định.
-             *
-             * LeftPanelContent nhận:
-             * - showHeader: Hiển thị logo header
-             * - isCollapsed: Đang thu gọn không
-             * - onToggleCollapse: Callback toggle collapse
              */}
             {sidebarContent || (
               <LeftPanelContent
@@ -355,154 +308,116 @@ export function DashboardLayout({
               />
             )}
           </aside>
-        )}
-
-        {/*
-         * =============================================================
-         * CỘT 2: MAIN AREA (Header + Content)
-         * =============================================================
-         *
-         * Luôn render, chiếm cột giữa (1fr).
-         *
-         * STRUCTURE:
-         * ┌─────────────────────────────────────┐
-         * │ Header (64px fixed height)          │
-         * ├─────────────────────────────────────┤
-         * │ MainContent (chiếm phần còn lại)    │
-         * │                                     │
-         * │                                     │
-         * └─────────────────────────────────────┘
-         *
-         * CLASSES:
-         * - grid grid-rows-[64px_1fr]: 2 rows, header 64px + content 1fr
-         * - min-w-0: Prevent overflow issues với flex children
-         * - h-screen: Full height
-         * - overflow-hidden: Chặn scroll ở container
-         */}
-        <div className="grid h-screen min-w-0 grid-rows-[64px_1fr] overflow-hidden">
-          {/*
-           * HEADER
-           * ------
-           * Hiển thị title, actions, và toggle buttons.
-           *
-           * Toggle buttons:
-           * - Hamburger (lg:hidden): Toggle left drawer trên mobile
-           * - Panel Right: Toggle right sidebar/drawer
-           *
-           * Buttons nằm trong Header (không trong Sidebar) vì:
-           * - SidebarRight có thể bị unmount (width 0px)
-           * - Nếu button trong Sidebar → button mất → không mở lại được
-           */}
-          <Header
-            title={headerTitle}
-            actions={headerActions}
-            className="border-border bg-background flex h-16 items-center border-b px-4"
-          >
-            {headerContent}
-          </Header>
 
           {/*
-           * MAIN CONTENT
-           * ------------
-           * Nội dung trang chính, truyền từ children.
+           * =============================================================
+           * CỘT 2: MAIN AREA (Header + Content)
+           * =============================================================
            *
-           * - noPadding: Bỏ padding nếu cần layout full-bleed
-           * - overflow-y-auto: Enable vertical scroll cho content
-           * - overscroll-contain: Prevent scroll chaining
+           * Luôn hiện.
            */}
-          <MainContent
-            noPadding={noPadding}
-            className="bg-background overflow-x-hidden overflow-y-auto overscroll-contain"
+          <div className="grid h-screen min-w-0 grid-rows-[64px_1fr] overflow-hidden">
+            <Header
+              title={headerTitle}
+              actions={headerActions}
+              className="bg-background flex h-16 items-center px-4"
+            >
+              {headerContent}
+            </Header>
+
+            <MainContent
+              noPadding={noPadding}
+              className="bg-background scrollbar-hidden overflow-x-hidden overflow-y-auto"
+            >
+              {children}
+            </MainContent>
+          </div>
+
+          {/*
+           * =============================================================
+           * CỘT 3: SIDEBAR RIGHT
+           * =============================================================
+           *
+           * - Mobile: hidden
+           * - Desktop (lg): flex
+           *
+           * Pointer events logic: disable click khi width = 0 (closed)
+           */}
+          <aside
+            className={`bg-sidebar scrollbar-hidden hidden h-screen flex-col overflow-hidden overflow-x-hidden overflow-y-auto transition-all duration-300 lg:flex ${
+              isRightOpen ? '' : 'pointer-events-none'
+            } `}
           >
-            {children}
-          </MainContent>
+            {rightPanelContent || <RightPanelContent />}
+          </aside>
         </div>
 
         {/*
-         * =============================================================
-         * CỘT 3: SIDEBAR RIGHT (Desktop Grid Mode)
-         * =============================================================
+         * =================================================================
+         * DRAWER LAYER (Tablet/Mobile)
+         * =================================================================
          *
-         * ĐIỀU KIỆN RENDER: isDesktop = true
+         * Render DrawerPanels khi viewport < 1024px.
+         * Các drawer nằm NGOÀI grid, là fixed overlay.
          *
          * BEHAVIOR:
-         * - LUÔN render để giữ grid 3 cột ổn định
-         * - Close = width 0px (do grid-template-columns)
-         * - Content tự động bị cắt bởi overflow-hidden
-         * - pointer-events-none khi closed để prevent click
+         * - position: fixed
+         * - Overlay backdrop (click để đóng)
+         * - Animation slide từ left/right
+         * - Z-index cao hơn main content
          *
-         * TẠI SAO KHÔNG UNMOUNT?
-         * ----------------------
-         * Nếu unmount khi close:
-         * - Grid structure thay đổi (3 → 2 cột)
-         * - Phải tính lại grid-template-columns
-         * - Có thể conflict với SidebarLeft collapse
-         * - Layout unstable
+         * LEFT DRAWER:
+         * - Slide từ trái
+         * - isOpen = isLeftOpen state
+         * - onClose = toggleLeft function
          *
-         * GIỮ VÀ SET WIDTH 0px:
-         * - Grid structure ổn định (luôn 3 cột)
-         * - Content bị ẩn tự nhiên bởi width 0
-         * - Không cần conditional render phức tạp
+         * RIGHT DRAWER:
+         * - Slide từ phải
+         * - isOpen = isRightOpen state
+         * - onClose = toggleRight function
          */}
-        {isDesktop && (
-          <aside
-            className={`bg-sidebar border-sidebar-border flex h-screen flex-col overflow-hidden border-l transition-all duration-300 ${isRightOpen ? '' : 'pointer-events-none'} `}
-          >
-            {/* Custom content hoặc RightPanelContent mặc định */}
-            {rightPanelContent || <RightPanelContent />}
-          </aside>
-        )}
+        {/*
+         * =================================================================
+         * DRAWER LAYER (Tablet/Mobile)
+         * =================================================================
+         *
+         * Render DrawerPanels khi viewport < 1024px.
+         * Các drawer nằm NGOÀI grid, là fixed overlay.
+         *
+         * FIX FOUC:
+         * Wrap trong div `lg:hidden` để đảm bảo khi Server render (isDesktop=false),
+         * UI này vẫn bị ẩn trên Desktop browser nhờ CSS.
+         */}
+        <div className="lg:hidden">
+          {!isDesktop && (
+            <>
+              {/* Left Drawer - Navigation */}
+              <DrawerPanel
+                side="left"
+                isOpen={isLeftOpen}
+                onClose={toggleLeft}
+                headerTitle="Vicophar"
+              >
+                {/* Dùng LeftPanelContent không có header (drawer có header riêng) */}
+                {sidebarContent || <LeftPanelContent showHeader={false} />}
+              </DrawerPanel>
+
+              {/* Right Drawer - Notes/Tasks/Options */}
+              <DrawerPanel
+                side="right"
+                isOpen={isRightOpen}
+                onClose={toggleRight}
+                showCloseButton={false}
+              >
+                {/* RightPanelContent với close button riêng */}
+                {rightPanelContent || (
+                  <RightPanelContent showCloseButton={true} />
+                )}
+              </DrawerPanel>
+            </>
+          )}
+        </div>
       </div>
-
-      {/*
-       * =================================================================
-       * DRAWER LAYER (Tablet/Mobile)
-       * =================================================================
-       *
-       * Render DrawerPanels khi viewport < 1024px.
-       * Các drawer nằm NGOÀI grid, là fixed overlay.
-       *
-       * BEHAVIOR:
-       * - position: fixed
-       * - Overlay backdrop (click để đóng)
-       * - Animation slide từ left/right
-       * - Z-index cao hơn main content
-       *
-       * LEFT DRAWER:
-       * - Slide từ trái
-       * - isOpen = isLeftOpen state
-       * - onClose = toggleLeft function
-       *
-       * RIGHT DRAWER:
-       * - Slide từ phải
-       * - isOpen = isRightOpen state
-       * - onClose = toggleRight function
-       */}
-      {!isDesktop && (
-        <>
-          {/* Left Drawer - Navigation */}
-          <DrawerPanel
-            side="left"
-            isOpen={isLeftOpen}
-            onClose={toggleLeft}
-            headerTitle="Vicophar"
-          >
-            {/* Dùng LeftPanelContent không có header (drawer có header riêng) */}
-            {sidebarContent || <LeftPanelContent showHeader={false} />}
-          </DrawerPanel>
-
-          {/* Right Drawer - Notes/Tasks/Options */}
-          <DrawerPanel
-            side="right"
-            isOpen={isRightOpen}
-            onClose={toggleRight}
-            showCloseButton={false}
-          >
-            {/* RightPanelContent với close button riêng */}
-            {rightPanelContent || <RightPanelContent showCloseButton={true} />}
-          </DrawerPanel>
-        </>
-      )}
     </>
   );
 }

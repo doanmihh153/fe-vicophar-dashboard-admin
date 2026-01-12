@@ -71,7 +71,13 @@
 
 import React, { type ReactNode } from 'react';
 import { useDashboard } from '@/components/providers/DashboardContext';
-import { Menu, PanelRightOpen, PanelRightClose } from 'lucide-react';
+import {
+  Menu,
+  PanelRightOpen,
+  PanelRightClose,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 
 /*
  * ===================================================================
@@ -113,7 +119,13 @@ export function Header({
    * - toggleRight: Toggle sidebar phải (cho cả desktop và mobile)
    * - isRightOpen: State hiện tại của sidebar phải
    */
-  const { toggleLeft, toggleRight, isRightOpen } = useDashboard();
+  const {
+    toggleLeft,
+    toggleRight,
+    isRightOpen,
+    toggleLeftCollapse,
+    isLeftCollapsed,
+  } = useDashboard();
 
   /*
    * OVERRIDE MODE
@@ -124,7 +136,7 @@ export function Header({
   if (children) {
     return (
       <header
-        className={`border-border bg-background flex h-16 items-center justify-between border-b px-4 ${className} `}
+        className={`bg-background flex h-16 items-center justify-between px-4 ${className} `}
       >
         {children}
       </header>
@@ -140,7 +152,7 @@ export function Header({
    */
   return (
     <header
-      className={`border-border bg-background flex h-16 items-center justify-between border-b px-4 ${className} `}
+      className={`bg-background flex h-16 items-center justify-between px-4 ${className} `}
     >
       {/*
        * =========================================================
@@ -175,6 +187,27 @@ export function Header({
           aria-label="Mở menu điều hướng"
         >
           <Menu className="h-5 w-5" />
+        </button>
+
+        {/*
+         * ---------------------------------------------------------
+         * NÚT TOGGLE SIDEBAR TRÁI (Desktop only)
+         * ---------------------------------------------------------
+         *
+         * - Chỉ hiện trên Desktop (lg:flex)
+         * - Ẩn trên Mobile/Tablet (hidden)
+         * - Điều khiển trạng thái collapsed (60px <-> 260px)
+         */}
+        <button
+          onClick={toggleLeftCollapse}
+          className="hover:bg-accent hidden rounded-lg p-2 transition-colors lg:flex"
+          aria-label={isLeftCollapsed ? 'Mở rộng sidebar' : 'Thu gọn sidebar'}
+        >
+          {isLeftCollapsed ? (
+            <ChevronRight className="h-5 w-5" />
+          ) : (
+            <ChevronLeft className="h-5 w-5" />
+          )}
         </button>
 
         {/*
