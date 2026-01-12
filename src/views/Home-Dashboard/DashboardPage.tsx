@@ -28,12 +28,13 @@ import React from 'react';
 import { RightPanelSlot } from '@/components/providers/RightPanelContext';
 import { useDashboardData } from './_hooks';
 
-// Components Phase 2
+// Import tất cả components
 import {
   HomeMainHeader,
   StatOverview,
   RecentContent,
   AnalyticsOverview,
+  RightBarContent,
 } from './_components';
 
 // =============================================================================
@@ -124,60 +125,9 @@ export function DashboardHomePage() {
        *
        * Inject vào RightPanelSlot (thay thế default RightPanelContent)
        * Chứa: DraggableItemList + CalendarPanel
-       *
-       * TODO: Phase 3 - Tạo RightBarContent component riêng
        */}
       <RightPanelSlot>
-        <div className="flex h-full flex-col p-4">
-          {/* Công việc */}
-          <div className="mb-8 flex-1">
-            <h3 className="text-muted-foreground mb-4 text-xs font-medium tracking-wide uppercase">
-              Công việc
-            </h3>
-            <ul className="space-y-1">
-              {isLoading
-                ? Array.from({ length: 5 }).map((_, i) => (
-                    <li key={i} className="flex items-center gap-3 p-3">
-                      <div className="bg-muted h-2 w-2 animate-pulse rounded-full" />
-                      <div className="bg-muted h-4 w-full animate-pulse rounded-md" />
-                    </li>
-                  ))
-                : data?.draggableItems.map((item) => (
-                    <li key={item.id}>
-                      <button className="hover:bg-muted/50 flex w-full items-center gap-3 p-3 text-left transition-colors duration-150">
-                        {/*
-                         * Priority dot - Exception theo Design Constitution
-                         * Đây là ngoại lệ duy nhất cho rounded-full với màu
-                         */}
-                        <span
-                          className={`h-2 w-2 shrink-0 rounded-full ${
-                            item.priority === 'high'
-                              ? 'bg-rose-500'
-                              : item.priority === 'medium'
-                                ? 'bg-amber-500'
-                                : 'bg-muted-foreground/30'
-                          }`}
-                        />
-                        <span className="min-w-0 flex-1 truncate text-sm">
-                          {item.title}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-            </ul>
-          </div>
-
-          {/* Calendar placeholder */}
-          <div>
-            <h3 className="text-muted-foreground mb-4 text-xs font-medium tracking-wide uppercase">
-              Lịch
-            </h3>
-            <div className="text-muted-foreground text-center text-sm">
-              {/* TODO: Phase 3 - CalendarPanel component */}
-              <p>Calendar sẽ được thêm ở Phase 3</p>
-            </div>
-          </div>
-        </div>
+        <RightBarContent items={data?.draggableItems} isLoading={isLoading} />
       </RightPanelSlot>
     </>
   );

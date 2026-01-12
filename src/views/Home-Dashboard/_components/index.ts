@@ -39,3 +39,12 @@ export { RecentItem } from './RecentContent';
 // ANALYTICS OVERVIEW
 // =============================================================================
 export { AnalyticsOverview } from './AnalyticsOverview';
+
+// =============================================================================
+// RIGHT BAR CONTENT
+// =============================================================================
+export { RightBarContent } from './RightBarContent';
+export { DraggableItemList } from './RightBarContent';
+export { TaskItem } from './RightBarContent';
+export { ItemDetailPopup } from './RightBarContent';
+export { CalendarPanel } from './RightBarContent';
