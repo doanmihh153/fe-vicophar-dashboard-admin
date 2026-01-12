@@ -123,7 +123,11 @@ export function LeftPanelContent({
                 label={item.title}
                 href={item.href}
                 badge={item.badge}
-                isActive={pathname === item.href}
+                isActive={
+                  item.href === '/'
+                    ? pathname === '/'
+                    : pathname?.startsWith(item.href)
+                }
                 isCollapsed={isCollapsed}
               />
             ))}

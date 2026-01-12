@@ -1,5 +1,4 @@
-'use client';
-
+import Link from 'next/link';
 import { TextHover } from '@/components/ui/text-hover';
 
 /**
@@ -36,7 +35,7 @@ export function NavItem({
   href = '#',
 }: NavItemProps) {
   return (
-    <a
+    <Link
       href={href}
       onClick={(e) => {
         if (isActive) {
@@ -132,6 +131,6 @@ export function NavItem({
           {badge}
         </span>
       )}
-    </a>
+    </Link>
   );
 }
