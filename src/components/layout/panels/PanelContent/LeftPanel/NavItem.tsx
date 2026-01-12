@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { TextHover } from '@/components/ui/text-hover';
+import { TextHover } from '@/components/ui/TextHover';
 
 /**
  * ---------------------------------------------------------------
