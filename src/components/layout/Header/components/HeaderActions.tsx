@@ -36,10 +36,8 @@ export function HeaderActions() {
       <div className="flex items-center gap-2 lg:gap-4">
         {/* Search - Có tooltip "Tìm kiếm" */}
         <Tooltip side="bottom" sideOffset={8}>
-          <TooltipTrigger asChild>
-            <div>
-              <HeaderSearch />
-            </div>
+          <TooltipTrigger>
+            <HeaderSearch />
           </TooltipTrigger>
           <TooltipContent className="bg-sidebar text-sidebar-foreground z-50 rounded-lg border px-3 py-1.5 text-sm shadow-md">
             Tìm kiếm
@@ -48,10 +46,8 @@ export function HeaderActions() {
 
         {/* Notification - Có tooltip "Thông báo" */}
         <Tooltip side="bottom" sideOffset={8}>
-          <TooltipTrigger asChild>
-            <div>
-              <HeaderNotifications />
-            </div>
+          <TooltipTrigger>
+            <HeaderNotifications />
           </TooltipTrigger>
           <TooltipContent className="bg-sidebar text-sidebar-foreground z-50 rounded-lg border px-3 py-1.5 text-sm shadow-md">
             Thông báo
@@ -60,10 +56,8 @@ export function HeaderActions() {
 
         {/* Avatar / User Profile - Có tooltip "Tài khoản" */}
         <Tooltip side="bottom" sideOffset={8}>
-          <TooltipTrigger asChild>
-            <div>
-              <HeaderUser />
-            </div>
+          <TooltipTrigger>
+            <HeaderUser />
           </TooltipTrigger>
           <TooltipContent className="bg-sidebar text-sidebar-foreground z-50 rounded-lg border px-3 py-1.5 text-sm shadow-md">
             Tài khoản
@@ -72,10 +66,8 @@ export function HeaderActions() {
 
         {/* Theme Toggler - Có tooltip "Dark-mode" */}
         <Tooltip side="bottom" sideOffset={8}>
-          <TooltipTrigger asChild>
-            <div>
-              <ThemeToggler />
-            </div>
+          <TooltipTrigger>
+            <ThemeToggler />
           </TooltipTrigger>
           <TooltipContent className="bg-sidebar text-sidebar-foreground z-50 rounded-lg border px-3 py-1.5 text-sm shadow-md">
             Dark-mode

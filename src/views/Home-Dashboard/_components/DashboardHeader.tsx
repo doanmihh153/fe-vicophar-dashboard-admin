@@ -6,11 +6,7 @@
  * =============================================================================
  *
  * MÔ TẢ:
- *   Header component với animation được tối ưu hóa.
- *
- * THAY ĐỔI:
- *   - Sử dụng DotLottieReact thay vì lottie-react để tối ưu performance.
- *   - DotLottie nhẹ hơn (~15kb so với 250kb+) và render bằng Canvas hoặc SVG.
+ *   Header chào mừng cho Dashboard với Lottie animation.
  *
  * =============================================================================
  */
@@ -20,15 +16,10 @@ import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/Skeleton';
 import welcomeAnimation from '@/assets/lottie/Welcom-lottie.json';
 
-// Dynamic import cho DotLottie để tránh SSR và tối ưu bundle
-const DotLottieReact = dynamic(
-  () =>
-    import('@lottiefiles/dotlottie-react').then((mod) => mod.DotLottieReact),
-  {
-    ssr: false,
-    loading: () => <Skeleton className="h-full min-h-[150px] w-full" />,
-  }
-);
+const Lottie = dynamic(() => import('lottie-react'), {
+  ssr: false,
+  loading: () => <Skeleton className="h-full min-h-[200px] w-full" />,
+});
 
 interface DashboardHeaderProps {
   userName: string;
@@ -44,21 +35,19 @@ export function DashboardHeader({
   return (
     <div className="border-border/50 relative w-full overflow-hidden rounded-3xl border bg-linear-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-sm">
       <div className="flex min-h-[300px] flex-col items-center justify-between gap-6 p-2 md:flex-row lg:p-4">
-        {/* LOTTIE ANIMATION (LEFT SIDE) */}
+        {/* LOTTIE ANIMATION */}
         <div className="w-[150px] shrink-0 lg:w-[200px]">
           {isLoading ? (
             <Skeleton className="aspect-square w-full rounded-xl" />
           ) : (
-            <DotLottieReact
-              data={welcomeAnimation}
-              loop
-              autoplay
+            <Lottie
+              animationData={welcomeAnimation}
+              loop={true}
               className="h-full w-full"
             />
           )}
         </div>
-
-        {/* TEXT CONTENT (RIGHT SIDE) */}
+        {/* TEXT CONTENT */}
         <div className="z-10 flex-1 space-y-3 text-center md:text-left">
           {isLoading ? (
             <>

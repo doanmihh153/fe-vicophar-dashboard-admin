@@ -204,7 +204,7 @@
     @apply border-border outline-ring/50; /* Mặc định mọi border dùng màu border */
   }
   body {
-    @apply bg-background text-foreground; /* Body dùng background và màu chữ chuẩn */
+    @apply bg-background text-foreground transition-colors duration-300; /* Body dùng background và màu chữ chuẩn */
   }
 }
 
