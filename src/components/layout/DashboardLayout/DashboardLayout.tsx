@@ -317,11 +317,7 @@ export function DashboardLayout({
            * Luôn hiện.
            */}
           <div className="grid h-screen min-w-0 grid-rows-[64px_1fr] overflow-hidden">
-            <Header
-              title={headerTitle}
-              actions={headerActions}
-              className="flex h-16 items-center px-4"
-            >
+            <Header className="flex h-16 items-center px-4">
               {headerContent}
             </Header>
 

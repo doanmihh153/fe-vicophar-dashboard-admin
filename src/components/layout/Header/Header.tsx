@@ -78,8 +78,8 @@ import {
   ArrowLeft,
   ArrowRight,
 } from 'lucide-react';
-import { ThemeToggler } from '@/components/ui/DarkTheme/ThemeToggler';
 import AnimatedHeaderButton from './AnimatedHeaderButton';
+import { HeaderActions } from './components/HeaderActions';
 
 /*
  * ===================================================================
@@ -110,7 +110,7 @@ interface HeaderProps {
 
 export function Header({
   title,
-  actions,
+
   children,
   className = '',
 }: HeaderProps) {
@@ -146,11 +146,7 @@ export function Header({
   }
 
   /*
-   * DEFAULT LAYOUT
-   * --------------
-   * ┌────────────────────────────────────────────────────┐
-   * │ [Hamburger] Title     ...     [Actions] [Toggle]  │
-   * └────────────────────────────────────────────────────┘
+   * NEW LAYOUT: Btn1 -- Search -- Actions -- Btn2
    */
   return (
     <header
@@ -158,31 +154,11 @@ export function Header({
     >
       {/*
        * =========================================================
-       * BÊN TRÁI: Hamburger + Title
+       * LEFT SECTION: Hamburger + Btn1 (Sidebar Toggle) + Title
        * =========================================================
        */}
-      <div className="flex items-center gap-3">
-        {/*
-         * ---------------------------------------------------------
-         * NÚT HAMBURGER MENU (Mobile/Tablet only)
-         * ---------------------------------------------------------
-         *
-         * CLASS lg:hidden:
-         * - Hiện khi viewport < 1024px (mobile/tablet)
-         * - Ẩn khi viewport ≥ 1024px (desktop)
-         *
-         * TẠI SAO lg:hidden MÀ KHÔNG PHẢI md:hidden?
-         * ------------------------------------------
-         * - Breakpoint chính của layout là 1024px (lg)
-         * - Dưới 1024px: Sidebar là drawer
-         * - Trên 1024px: Sidebar là grid column
-         * - Hamburger chỉ cần khi sidebar là drawer
-         *
-         * FUNCTION: toggleLeft
-         * - Dùng chung cho drawer (mobile) và grid (desktop)
-         * - Trên mobile: Mở/đóng left drawer
-         * - Trên desktop: Thường không trigger (vì button hidden)
-         */}
+      <div className="flex shrink-0 items-center gap-3">
+        {/* Mobile Hamburger */}
         <button
           onClick={toggleLeft}
           className="hover:bg-accent rounded-lg p-2 transition-colors lg:hidden"
@@ -191,21 +167,7 @@ export function Header({
           <Menu className="h-5 w-5" />
         </button>
 
-        {/*
-         * ---------------------------------------------------------
-         * NÚT TOGGLE SIDEBAR TRÁI (Desktop only)
-         * ---------------------------------------------------------
-         *
-         * - Chỉ hiện trên Desktop (lg:flex)
-         * - Ẩn trên Mobile/Tablet (hidden)
-         * - Điều khiển trạng thái collapsed (60px <-> 260px)
-         */}
-        {/*
-         * ---------------------------------------------------------
-         * NÚT TOGGLE SIDEBAR TRÁI (Desktop only)
-         * ---------------------------------------------------------
-         * REPLACED WITH ANIMATED BUTTON
-         */}
+        {/* Desktop Animated Button for Left Sidebar */}
         <div className="hidden lg:block">
           <AnimatedHeaderButton
             onClick={toggleLeftCollapse}
@@ -220,69 +182,24 @@ export function Header({
           />
         </div>
 
-        {/*
-         * ---------------------------------------------------------
-         * TITLE / BREADCRUMB
-         * ---------------------------------------------------------
-         *
-         * Hiển thị page title hoặc breadcrumb.
-         * - font-display: Font heading từ theme
-         * - truncate: Cắt text dài bằng "..."
-         */}
+        {/* Title (Hidden on mobile if space is tight, usually good to keep) */}
         {title && (
-          <h1 className="font-display truncate text-lg font-medium">{title}</h1>
+          <h1 className="font-display ml-2 hidden truncate text-lg font-medium xl:block">
+            {title}
+          </h1>
         )}
       </div>
 
       {/*
        * =========================================================
-       * BÊN PHẢI: Actions + Toggle SidebarRight
+       * RIGHT SECTION: Actions + Btn2 (Panel Toggle)
        * =========================================================
        */}
-      <div className="flex items-center gap-2">
-        {/* Custom actions từ props (search, notifications, etc.) */}
-        {actions}
+      <div className="flex shrink-0 items-center gap-2">
+        {/* Standard Actions (Avatar, Notification, Theme) */}
+        <HeaderActions />
 
-        {/* Theme Toggler */}
-        <ThemeToggler />
-
-        {/*
-         * ---------------------------------------------------------
-         * NÚT TOGGLE SIDEBAR PHẢI
-         * ---------------------------------------------------------
-         *
-         * ⚠️ BUTTON NÀY PHẢI NẰM TRONG HEADER, KHÔNG TRONG SIDEBARRIGHT
-         *
-         * TẠI SAO?
-         * --------
-         * - SidebarRight trên Desktop có thể bị unmount (width = 0px)
-         * - Nếu button trong SidebarRight:
-         *   - Close → SidebarRight unmount → button mất
-         *   - User không thể click để mở lại
-         *
-         * - Button trong Header:
-         *   - Header luôn render
-         *   - Button luôn tồn tại
-         *   - User luôn có thể toggle
-         *
-         * HIỂN THỊ: Trên TẤT CẢ breakpoints
-         * - Desktop: Toggle grid column (320px ↔ 0px)
-         * - Mobile: Toggle right drawer
-         *
-         * ICON THAY ĐỔI THEO STATE:
-         * - isRightOpen = true: PanelRightClose (có nút X)
-         * - isRightOpen = false: PanelRightOpen (có mũi tên mở)
-         *
-         * STYLE THAY ĐỔI THEO STATE:
-         * - Open: bg-primary (highlight rõ rằng panel đang mở)
-         * - Closed: hover:bg-accent (subtle)
-         *
-         * FLOW SAU KHI CLICK:
-         * toggleRight() → setRightOpen(!isRightOpen)
-         * → DashboardLayout re-render → getGridColumns() đổi
-         * → grid-template-columns thay đổi (320px ↔ 0px)
-         * → SidebarRight animate width
-         */}
+        {/* Mobile Right Toggle */}
         <button
           onClick={toggleRight}
           className={`rounded-lg p-2 transition-colors lg:hidden ${
@@ -301,7 +218,7 @@ export function Header({
         </button>
 
         {/* Desktop Animated Button for Right Panel */}
-        <div className="hidden lg:block">
+        <div className="ml-2 hidden lg:block">
           <AnimatedHeaderButton
             onClick={toggleRight}
             label="Panel"

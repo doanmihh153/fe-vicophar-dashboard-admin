@@ -64,7 +64,7 @@ export const ThemeToggler = ({
         aria-label="Loading theme"
       >
         {/* Placeholder icon - hiển thị trong lúc hydration */}
-        <div className="bg-background/20 h-5 w-5 animate-pulse rounded-full" />
+        <div className="h-5 w-5 animate-pulse rounded-full" />
       </button>
     );
   }
@@ -87,7 +87,7 @@ export const ThemeToggler = ({
         return (
           <button
             onClick={() => toggleTheme(nextTheme)}
-            className={`bg-background hover:bg-background/80 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full shadow transition-colors ${className}`}
+            className={`bg-background flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full shadow transition-colors ${className}`}
             title={`Switch to ${nextTheme} mode`}
           >
             {effective === 'system' ? (

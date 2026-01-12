@@ -29,7 +29,7 @@ export function NavSection({
        * h-0 + overflow-hidden ẩn mà vẫn giữ DOM.
        */}
       <div
-        className={`text-muted-foreground px-3 text-xs font-semibold tracking-wider uppercase transition-all duration-200 ${
+        className={`text-muted-foreground px-3 text-xs tracking-wider uppercase transition-all duration-200 ${
           isCollapsed
             ? 'mb-0 h-0 overflow-hidden opacity-0'
             : 'mb-2 h-auto opacity-100'
