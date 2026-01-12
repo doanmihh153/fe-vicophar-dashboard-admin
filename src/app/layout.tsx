@@ -72,7 +72,7 @@ import { DashboardProvider } from '@/components/providers/DashboardContext';
  */
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard - Vicophar',
+  title: 'Dashboard - Vicophar',
   description: 'Dashboard quản trị nội dung cho Vicophar',
 };
 

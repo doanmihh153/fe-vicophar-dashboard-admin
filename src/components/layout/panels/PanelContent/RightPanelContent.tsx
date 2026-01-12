@@ -167,7 +167,7 @@ export function RightPanelContent({
     <>
       {/* ===== HEADER: Tabs + Close Button ===== */}
       {(showTabs || showCloseButton) && (
-        <div className="border-border flex items-center border-b">
+        <div className="flex items-center">
           {/* Close button (optional) */}
           {showCloseButton && (
             <button

@@ -27,5 +27,4 @@ export { Header } from './Header';
 export { MainContent } from './MainContent';
 
 // Legacy components (giữ lại cho backward compatibility)
-export { SidebarLeft } from './SidebarLeft';
 export { SidebarRight } from './SidebarRight';
