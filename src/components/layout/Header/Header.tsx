@@ -75,9 +75,11 @@ import {
   Menu,
   PanelRightOpen,
   PanelRightClose,
-  ChevronLeft,
-  ChevronRight,
+  ArrowLeft,
+  ArrowRight,
 } from 'lucide-react';
+import { ThemeToggler } from '@/components/ui/DarkTheme/ThemeToggler';
+import AnimatedHeaderButton from './AnimatedHeaderButton';
 
 /*
  * ===================================================================
@@ -152,7 +154,7 @@ export function Header({
    */
   return (
     <header
-      className={`bg-background flex h-16 items-center justify-between px-4 ${className} `}
+      className={`bg-sidebar relative flex h-16 items-center justify-between px-4 lg:top-2 lg:mx-2 lg:rounded-2xl ${className} `}
     >
       {/*
        * =========================================================
@@ -198,17 +200,25 @@ export function Header({
          * - Ẩn trên Mobile/Tablet (hidden)
          * - Điều khiển trạng thái collapsed (60px <-> 260px)
          */}
-        <button
-          onClick={toggleLeftCollapse}
-          className="hover:bg-accent hidden rounded-lg p-2 transition-colors lg:flex"
-          aria-label={isLeftCollapsed ? 'Mở rộng sidebar' : 'Thu gọn sidebar'}
-        >
-          {isLeftCollapsed ? (
-            <ChevronRight className="h-5 w-5" />
-          ) : (
-            <ChevronLeft className="h-5 w-5" />
-          )}
-        </button>
+        {/*
+         * ---------------------------------------------------------
+         * NÚT TOGGLE SIDEBAR TRÁI (Desktop only)
+         * ---------------------------------------------------------
+         * REPLACED WITH ANIMATED BUTTON
+         */}
+        <div className="hidden lg:block">
+          <AnimatedHeaderButton
+            onClick={toggleLeftCollapse}
+            label="Sidebar"
+            icon={
+              isLeftCollapsed ? (
+                <ArrowRight className="h-5 w-5" />
+              ) : (
+                <ArrowLeft className="h-5 w-5" />
+              )
+            }
+          />
+        </div>
 
         {/*
          * ---------------------------------------------------------
@@ -232,6 +242,9 @@ export function Header({
       <div className="flex items-center gap-2">
         {/* Custom actions từ props (search, notifications, etc.) */}
         {actions}
+
+        {/* Theme Toggler */}
+        <ThemeToggler />
 
         {/*
          * ---------------------------------------------------------
@@ -272,7 +285,7 @@ export function Header({
          */}
         <button
           onClick={toggleRight}
-          className={`rounded-lg p-2 transition-colors ${
+          className={`rounded-lg p-2 transition-colors lg:hidden ${
             isRightOpen
               ? 'bg-primary text-primary-foreground'
               : 'hover:bg-accent text-muted-foreground hover:text-foreground'
@@ -286,6 +299,21 @@ export function Header({
             <PanelRightOpen className="h-5 w-5" />
           )}
         </button>
+
+        {/* Desktop Animated Button for Right Panel */}
+        <div className="hidden lg:block">
+          <AnimatedHeaderButton
+            onClick={toggleRight}
+            label="Panel"
+            icon={
+              isRightOpen ? (
+                <ArrowRight className="h-5 w-5" />
+              ) : (
+                <ArrowLeft className="h-5 w-5" />
+              )
+            }
+          />
+        </div>
       </div>
     </header>
   );

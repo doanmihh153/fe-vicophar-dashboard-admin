@@ -59,12 +59,12 @@ export const ThemeToggler = ({
   if (!mounted) {
     return (
       <button
-        className={`bg-accent text-accent-foreground flex h-10 w-10 items-center justify-center rounded-full transition-colors ${className}`}
+        className={`bg-background flex h-10 w-10 items-center justify-center rounded-full transition-colors ${className}`}
         disabled
         aria-label="Loading theme"
       >
         {/* Placeholder icon - hiển thị trong lúc hydration */}
-        <div className="bg-accent-foreground/20 h-5 w-5 animate-pulse rounded-full" />
+        <div className="bg-background/20 h-5 w-5 animate-pulse rounded-full" />
       </button>
     );
   }
@@ -87,7 +87,7 @@ export const ThemeToggler = ({
         return (
           <button
             onClick={() => toggleTheme(nextTheme)}
-            className={`bg-accent text-accent-foreground hover:bg-accent/80 flex h-10 w-10 items-center justify-center rounded-full transition-colors ${className}`}
+            className={`bg-background hover:bg-background/80 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full shadow transition-colors ${className}`}
             title={`Switch to ${nextTheme} mode`}
           >
             {effective === 'system' ? (

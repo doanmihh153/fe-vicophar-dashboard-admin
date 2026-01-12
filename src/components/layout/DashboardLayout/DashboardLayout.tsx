@@ -296,7 +296,7 @@ export function DashboardLayout({
            *
            * LUÔN RENDER HTML (Server Side) -> Tránh layout shift
            */}
-          <aside className="bg-sidebar m-2 hidden h-[calc(100vh-16px)] flex-col overflow-hidden rounded-2xl transition-all duration-300 lg:flex">
+          <aside className="bg-background hidden flex-col overflow-hidden transition-all duration-300 lg:mt-4 lg:flex">
             {/*
              * Custom sidebar content hoặc LeftPanelContent mặc định.
              */}
@@ -320,7 +320,7 @@ export function DashboardLayout({
             <Header
               title={headerTitle}
               actions={headerActions}
-              className="bg-background flex h-16 items-center px-4"
+              className="flex h-16 items-center px-4"
             >
               {headerContent}
             </Header>
