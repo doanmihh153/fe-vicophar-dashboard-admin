@@ -44,6 +44,7 @@ import { NAV_SECTIONS } from '@/config/navigation';
  * ===================================================================
  */
 import { NavItem, NavSection, LeftPanelHeader } from './LeftPanel';
+import { MotionNav } from './LeftPanel/MotionNav';
 
 /*
  * ===================================================================
@@ -133,6 +134,18 @@ export function LeftPanelContent({
             ))}
           </NavSection>
         ))}
+      </div>
+
+      {/*
+       * =========================================================
+       * MOTION NAV - CỔ VŨ ADMIN
+       * =========================================================
+       *
+       * Hiển thị Lottie animation và câu cổ vũ ở bottom.
+       * Ẩn text khi collapsed.
+       */}
+      <div className="bg-sidebar m-2 mt-auto shrink-0 rounded-2xl">
+        <MotionNav isCollapsed={isCollapsed} />
       </div>
     </div>
   );
