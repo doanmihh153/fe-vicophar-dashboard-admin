@@ -38,7 +38,7 @@ export function MainContent({
 }: MainContentProps) {
   return (
     <main
-      className={`bg-background flex-1 overflow-x-hidden overflow-y-auto overscroll-contain ${noPadding ? '' : 'p-4 md:p-6'} ${className} `}
+      className={`bg-background flex-1 overflow-x-hidden overflow-y-auto overscroll-contain ${noPadding ? '' : 'pt-4 lg:pt-6'} ${className} `}
       role="main"
       aria-label="Nội dung chính"
     >

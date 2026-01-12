@@ -106,6 +106,7 @@ import { useIsDesktop } from '@/hooks';
 
 // Context - Lớp 2: Panel State
 import { useDashboard } from '@/components/providers/DashboardContext';
+import { useRightPanelContent } from '@/components/providers/RightPanelContext';
 
 // Components - UI Primitives
 import { Header } from '@/components/layout/Header';
@@ -199,6 +200,17 @@ export function DashboardLayout({
     toggleLeft,
     toggleRight,
   } = useDashboard();
+
+  /*
+   * =================================================================
+   * SLOTTED RIGHT PANEL CONTENT
+   * =================================================================
+   *
+   * Lấy nội dung sidebar phải từ Context (nếu có).
+   * Ưu tiên: slottedContent > rightPanelContent prop > default
+   */
+  const slottedRightContent = useRightPanelContent();
+  const finalRightContent = slottedRightContent || rightPanelContent;
 
   /*
    * =================================================================
@@ -340,11 +352,11 @@ export function DashboardLayout({
            * Pointer events logic: disable click khi width = 0 (closed)
            */}
           <aside
-            className={`bg-sidebar scrollbar-hidden hidden h-screen flex-col overflow-hidden overflow-x-hidden overflow-y-auto transition-all duration-300 lg:flex ${
+            className={`bg-background scrollbar-hidden hidden h-screen flex-col overflow-hidden overflow-x-hidden overflow-y-auto transition-all duration-300 lg:flex ${
               isRightOpen ? '' : 'pointer-events-none'
             } `}
           >
-            {rightPanelContent || <RightPanelContent />}
+            {finalRightContent || <RightPanelContent />}
           </aside>
         </div>
 
@@ -406,7 +418,7 @@ export function DashboardLayout({
                 showCloseButton={false}
               >
                 {/* RightPanelContent với close button riêng */}
-                {rightPanelContent || (
+                {finalRightContent || (
                   <RightPanelContent showCloseButton={true} />
                 )}
               </DrawerPanel>
