@@ -297,7 +297,7 @@ export function DashboardLayout({
          * - Desktop (lg): 3 cột dựa trên CSS variables
          */}
         <div
-          className={`grid h-full w-full max-w-[1920px] grid-cols-1 overflow-hidden transition-all duration-300 ease-in-out lg:grid-cols-[var(--left-width)_1fr_var(--right-width)] ${className} `}
+          className={`grid h-full w-full max-w-[1920px] grid-cols-1 overflow-hidden transition-[grid-template-columns] duration-300 ease-in-out lg:grid-cols-[var(--left-width)_1fr_var(--right-width)] ${className} `}
           style={gridStyle}
         >
           {/*
@@ -310,7 +310,7 @@ export function DashboardLayout({
            *
            * LUÔN RENDER HTML (Server Side) -> Tránh layout shift
            */}
-          <aside className="bg-background hidden flex-col overflow-hidden transition-all duration-300 lg:mt-4 lg:flex">
+          <aside className="bg-background hidden flex-col overflow-hidden lg:mt-4 lg:flex">
             {/*
              * Custom sidebar content hoặc LeftPanelContent mặc định.
              */}
@@ -375,7 +375,7 @@ export function DashboardLayout({
            * Pointer events logic: disable click khi width = 0 (closed)
            */}
           <aside
-            className={`bg-background scrollbar-hidden hidden h-screen flex-col overflow-hidden overflow-x-hidden overflow-y-auto transition-all duration-300 lg:flex ${
+            className={`bg-background scrollbar-hidden hidden h-screen flex-col overflow-hidden overflow-x-hidden overflow-y-auto lg:flex ${
               isRightOpen ? '' : 'pointer-events-none'
             } `}
           >
