@@ -87,7 +87,7 @@ export const ThemeToggler = ({
         return (
           <button
             onClick={() => toggleTheme(nextTheme)}
-            className={`bg-background flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full shadow transition-colors ${className}`}
+            className={`bg-background flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors ${className}`}
             title={`Switch to ${nextTheme} mode`}
           >
             {effective === 'system' ? (

@@ -117,6 +117,8 @@ import {
   RightPanelContent, // Nội dung sidebar phải
 } from '@/components/layout/panels';
 
+import { cn } from '@/lib/utils';
+
 /*
  * ===================================================================
  * TYPES
@@ -328,18 +330,39 @@ export function DashboardLayout({
            *
            * Luôn hiện.
            */}
-          <div className="grid h-screen min-w-0 grid-rows-[64px_1fr] overflow-hidden">
-            <Header className="flex h-16 items-center px-4">
+          {/*
+           * =============================================================
+           * CỘT 2: MAIN AREA (Header + Content)
+           * =============================================================
+           *
+           * ISOLATED "ISLAND" LAYOUT:
+           * - Desktop: Floating card style (margin, rounded, border)
+           * - Mobile: Full screen (như cũ)
+           */}
+          <section
+            className={cn(
+              'bg-sidebar relative z-0 flex min-w-0 flex-col overflow-hidden',
+
+              /* Mobile: Full height */
+              'h-screen',
+
+              /* Desktop: Island Style */
+              'lg:border-sidebar-border lg:my-2 lg:h-[calc(100vh-16px)] lg:rounded-2xl'
+            )}
+          >
+            {/* Header: Fixed height, sticky top or static driven by flex */}
+            <Header className="bg-sidebar/80 sticky top-0 z-50 flex h-16 shrink-0 items-center px-4 backdrop-blur-md">
               {headerContent}
             </Header>
 
+            {/* Content: Flex grow to fill remaining space */}
             <MainContent
               noPadding={noPadding}
-              className="bg-background scrollbar-hidden overflow-x-hidden overflow-y-auto"
+              className="scrollbar-hidden flex-1 overflow-x-hidden overflow-y-auto"
             >
               {children}
             </MainContent>
-          </div>
+          </section>
 
           {/*
            * =============================================================

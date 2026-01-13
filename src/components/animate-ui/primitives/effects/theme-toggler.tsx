@@ -104,7 +104,7 @@ function ThemeToggler({
           setPreview({ effective: theme, resolved });
           document.documentElement.classList.toggle(
             'dark',
-            resolved === 'dark',
+            resolved === 'dark'
           );
         });
       }).ready;
@@ -116,13 +116,13 @@ function ThemeToggler({
             duration: 700,
             easing: 'ease-in-out',
             pseudoElement: '::view-transition-new(root)',
-          },
+          }
         )
         .finished.finally(() => {
           setTheme(theme);
         });
     },
-    [onImmediateChange, resolvedTheme, fromClip, toClip, setTheme],
+    [onImmediateChange, resolvedTheme, fromClip, toClip, setTheme]
   );
 
   return (

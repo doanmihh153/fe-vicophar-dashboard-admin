@@ -53,7 +53,7 @@ function MotionNavSkeleton() {
       {/* Lottie placeholder */}
       <Skeleton
         className="w-full rounded-xl"
-        style={{ aspectRatio: '1.8 / 1' }}
+        style={{ aspectRatio: '1 / 1' }}
       />
       {/* Quote placeholder */}
       <Skeleton className="h-4 w-3/4 rounded-md" />
@@ -99,7 +99,7 @@ export function MotionNav({ isCollapsed = false }: MotionNavProps) {
       >
         <Lottie
           animationData={welcomeAnimation}
-          loop
+          loop={false}
           autoplay
           style={{ width: '100%', height: '100%' }}
         />

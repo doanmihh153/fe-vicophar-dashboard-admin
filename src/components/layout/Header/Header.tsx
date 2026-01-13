@@ -150,7 +150,7 @@ export function Header({
    */
   return (
     <header
-      className={`bg-sidebar relative flex h-16 items-center justify-between px-4 lg:top-2 lg:mx-2 lg:rounded-2xl ${className} `}
+      className={`bg-sidebar relative flex h-16 items-center justify-between px-4 ${className} `}
     >
       {/*
        * =========================================================
