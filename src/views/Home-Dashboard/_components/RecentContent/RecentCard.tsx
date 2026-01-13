@@ -21,7 +21,7 @@ import {
   PreviewCardPopup,
 } from '@/components/ui/preview-card';
 import type { RecentContentItem } from '../../_data';
-import { VisualCard } from '@/components/custom/VisualCard';
+import { AppleGridCard } from '@/components/custom/AppleGridCard';
 import { cn } from '@/lib/utils';
 import { Eye, Clock, FileText, ShoppingBag, Newspaper } from 'lucide-react';
 import { formatRelativeTime } from '../../_utils';
@@ -36,10 +36,10 @@ export function RecentCard({ item }: RecentCardProps) {
     <div
       className={cn(
         'flex items-center rounded-full px-3 py-1 text-[10px] font-bold tracking-widest text-white/90 uppercase shadow-sm backdrop-blur-md',
-        item.status === 'published' ? 'bg-black/30' : 'bg-amber-500/30'
+        item.status === 'published' ? 'bg-white/20' : 'bg-amber-500/30'
       )}
     >
-      {item.status === 'published' ? 'Promoted' : 'Draft'}
+      {item.status === 'published' ? 'Unique' : 'Draft'}
     </div>
   );
 
@@ -57,45 +57,18 @@ export function RecentCard({ item }: RecentCardProps) {
   return (
     <PreviewCard>
       {/* TRIGGER */}
-      <PreviewCardTrigger>
-        <VisualCard
+      <PreviewCardTrigger className="h-full">
+        {/* Apple Grid Card Style (Full Height Feature) */}
+        <AppleGridCard
           title={item.title}
           subtitle={item.type.toUpperCase()}
           image={item.thumbnail}
-          aspectRatio="2/1"
           badge={Badge}
-          className="border-none shadow-none" // Force no border/shadow
-          variant="dark"
-        >
-          {/* Footer Info & Action Button */}
-          <div className="flex w-full items-end justify-between">
-            <div className="flex items-center gap-2 text-white/80">
-              <Clock className="h-3.5 w-3.5" />
-              <span className="text-xs font-medium">{relativeTime}</span>
-            </div>
-
-            {/* Apple-style Plus Button */}
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-transform duration-300 hover:scale-110 hover:bg-white hover:text-black">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-              </svg>
-            </div>
-          </div>
-        </VisualCard>
+          className="h-full min-h-[320px]" // Ensure tall card
+        />
       </PreviewCardTrigger>
 
-      {/* POPUP */}
+      {/* POPUP (Keep existing logic) */}
       <PreviewCardPortal>
         <PreviewCardPositioner>
           <PreviewCardPopup className="w-[85vw] p-4 sm:w-[320px]">
