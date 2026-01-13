@@ -81,7 +81,13 @@ export function DashboardHomePage() {
        * Tuân thủ Spacing System: 4/8/12/16/24/32/48/64
        */}
       <div className="p-6 lg:p-12">
-        <div className="grid gap-8">
+        {/*
+         * Vertical Rhythm: space-y thay vì gap để kiểm soát từng section
+         * Welcome: mb-12 (48px) - entry point cần breathing room
+         * Stat: mt-0 (nối liền visual với welcome greeting)
+         * Content: mt-12 (48px) - tách khỏi stat overview
+         */}
+        <div className="space-y-12">
           {/*
            * ===============================================
            * ROW 1: Main Header (Welcome + Context Panel)
@@ -96,8 +102,12 @@ export function DashboardHomePage() {
            * ===============================================
            * ROW 2: Stat Overview (Grid 4 cột)
            * ===============================================
+           * Margin-top nhỏ hơn để liền với welcome section
+           * Tạo cảm giác "context → data" liền mạch
            */}
-          <StatOverview stats={data?.stats} isLoading={isLoading} />
+          <div className="-mt-4">
+            <StatOverview stats={data?.stats} isLoading={isLoading} />
+          </div>
 
           {/*
            * ===============================================
@@ -108,7 +118,7 @@ export function DashboardHomePage() {
            * - RecentContent chiếm 2 phần
            * - AnalyticsOverview chiếm 1 phần
            */}
-          <div className="grid gap-8 lg:grid-cols-[2fr_1fr]">
+          <div className="grid gap-12 lg:grid-cols-[2fr_1fr]">
             <RecentContent items={data?.recentContent} isLoading={isLoading} />
             <AnalyticsOverview
               analytics={data?.analytics}

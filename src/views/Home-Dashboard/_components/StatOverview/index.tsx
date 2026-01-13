@@ -58,8 +58,11 @@ export function StatOverview({ stats, isLoading }: StatOverviewProps) {
 
   return (
     <section>
-      {/* Section Title - theo Typography Law */}
-      <h2 className="text-muted-foreground mb-4 text-sm font-medium tracking-wide uppercase">
+      {/*
+       * Section Header - nhỏ, uppercase, tracking-wide
+       * mb-6 (24px) để tách khỏi grid
+       */}
+      <h2 className="text-muted-foreground/70 mb-6 text-xs font-medium tracking-widest uppercase">
         Tổng quan
       </h2>
 

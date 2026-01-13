@@ -59,15 +59,15 @@ interface RightBarContentProps {
  */
 export function RightBarContent({ items, isLoading }: RightBarContentProps) {
   return (
-    <div className="flex h-full flex-col p-4">
+    <div className="flex h-full flex-col px-4 py-6">
       {/*
        * ====================================
-       * Công việc (Task List)
+       * Công việc (Task List) - PRIMARY
        * ====================================
        * Chiếm phần lớn không gian (flex-1)
        */}
-      <div className="mb-8 flex-1">
-        <h3 className="text-muted-foreground mb-4 text-xs font-medium tracking-wide uppercase">
+      <div className="flex-1">
+        <h3 className="text-muted-foreground/60 mb-4 text-[10px] font-medium tracking-widest uppercase">
           Công việc
         </h3>
         <DraggableItemList items={items} isLoading={isLoading} />
@@ -75,12 +75,12 @@ export function RightBarContent({ items, isLoading }: RightBarContentProps) {
 
       {/*
        * ====================================
-       * Lịch (Calendar)
+       * Lịch (Calendar) - SECONDARY
        * ====================================
-       * Cố định ở cuối right bar
+       * Cố định ở cuối, spacing 32px (mt-8) tách khỏi task list
        */}
-      <div>
-        <h3 className="text-muted-foreground mb-4 text-xs font-medium tracking-wide uppercase">
+      <div className="mt-8 pt-6">
+        <h3 className="text-muted-foreground/50 mb-4 text-[10px] font-medium tracking-widest uppercase">
           Lịch
         </h3>
         <CalendarPanel />

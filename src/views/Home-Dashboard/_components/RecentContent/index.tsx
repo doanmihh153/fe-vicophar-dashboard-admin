@@ -71,13 +71,16 @@ export function RecentContent({
 }: RecentContentProps) {
   return (
     <section>
-      {/* Section Title - theo Typography Law */}
-      <h2 className="text-muted-foreground mb-4 text-sm font-medium tracking-wide uppercase">
+      {/*
+       * Section Header - nhỏ, uppercase, tracking-widest
+       * mb-6 (24px) để tách khỏi list
+       */}
+      <h2 className="text-muted-foreground/70 mb-6 text-xs font-medium tracking-widest uppercase">
         Nội dung gần đây
       </h2>
 
-      {/* Items container - space-y-1 (4px) */}
-      <div className="space-y-1">
+      {/* Items container - space-y-2 (8px) để tạo nhịp đọc */}
+      <div className="space-y-2">
         {isLoading
           ? // Skeleton placeholders
             Array.from({ length: SKELETON_COUNT }).map((_, i) => (

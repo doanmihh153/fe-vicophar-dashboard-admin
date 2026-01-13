@@ -79,7 +79,7 @@ export function WelcomeSection({
         ) : (
           <Lottie
             animationData={welcomeAnimation}
-            loop={false}
+            loop={true}
             autoplay={!hasPlayed}
             onComplete={() => setHasPlayed(true)}
             className="h-full w-full"

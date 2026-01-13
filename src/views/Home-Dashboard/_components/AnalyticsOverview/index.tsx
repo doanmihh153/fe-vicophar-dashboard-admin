@@ -63,10 +63,13 @@ export function AnalyticsOverview({
   isLoading,
 }: AnalyticsOverviewProps) {
   return (
-    <section>
-      {/* Section Title - theo Typography Law */}
-      <h2 className="text-muted-foreground mb-4 text-sm font-medium tracking-wide uppercase">
-        Analytics
+    <section className="opacity-80">
+      {/*
+       * Section Header - nhỏ nhất, uppercase
+       * Analytics là signal, không phải focus chính
+       */}
+      <h2 className="text-muted-foreground/60 mb-6 text-[10px] font-medium tracking-widest uppercase">
+        Thống kê
       </h2>
 
       <div className="space-y-6">
@@ -84,8 +87,8 @@ export function AnalyticsOverview({
               <Skeleton className="h-8 w-16 rounded-md" />
             ) : (
               <>
-                {/* Số liệu chính */}
-                <span className="text-3xl font-medium tabular-nums">
+                {/* Số liệu chính - nhỏ hơn StatCard */}
+                <span className="text-2xl font-medium tabular-nums">
                   {formatNumber(analytics?.todayPageviews ?? 0)}
                 </span>
 
@@ -124,8 +127,8 @@ export function AnalyticsOverview({
          * ====================================
          */}
         <div>
-          <span className="text-muted-foreground text-sm">Nội dung hot</span>
-          <ul className="mt-2 space-y-2">
+          <span className="text-muted-foreground/80 text-xs">Nội dung hot</span>
+          <ul className="mt-2 space-y-1.5">
             {isLoading
               ? // Skeleton placeholders
                 Array.from({ length: 3 }).map((_, i) => (
@@ -136,11 +139,11 @@ export function AnalyticsOverview({
                 ))
               : // Actual top content (giới hạn 3)
                 analytics?.topContent.slice(0, 3).map((item, i) => (
-                  <li key={i} className="flex justify-between text-sm">
+                  <li key={i} className="flex justify-between text-xs">
                     {/* Title - truncate nếu dài */}
-                    <span className="truncate">{item.title}</span>
+                    <span className="truncate opacity-90">{item.title}</span>
                     {/* Views count - tabular-nums */}
-                    <span className="text-muted-foreground tabular-nums">
+                    <span className="text-muted-foreground/70 tabular-nums">
                       {formatNumber(item.views)}
                     </span>
                   </li>

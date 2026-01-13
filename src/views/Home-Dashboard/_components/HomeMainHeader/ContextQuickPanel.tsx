@@ -81,20 +81,20 @@ export function ContextQuickPanel({
   isLoading,
 }: ContextQuickPanelProps) {
   return (
-    <div className="hidden items-center gap-6 lg:flex">
+    <div className="hidden items-center gap-6 opacity-70 lg:flex">
       {PANEL_ITEMS.map((item) => (
         <div key={item.key} className="text-center">
           {isLoading ? (
             // Skeleton cho số - căn giữa
-            <Skeleton className="mx-auto h-6 w-8 rounded-md" />
+            <Skeleton className="mx-auto h-5 w-6 rounded-md" />
           ) : (
-            // Số liệu - dùng tabular-nums để căn đều
-            <span className="text-2xl font-medium tabular-nums">
+            // Số liệu - giảm size xuống text-lg để không tranh spotlight
+            <span className="text-lg font-medium tabular-nums">
               {context?.[item.key] ?? 0}
             </span>
           )}
-          {/* Label - luôn hiển thị (không skeleton) */}
-          <span className="text-muted-foreground mt-1 block text-xs">
+          {/* Label - giữ nguyên size nhỏ */}
+          <span className="text-muted-foreground mt-1 block text-[10px] tracking-wider uppercase">
             {item.label}
           </span>
         </div>
