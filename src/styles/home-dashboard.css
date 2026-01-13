@@ -98,7 +98,7 @@
    ========================================================================== */
 
 .dashboard-section {
-  background: var(--dashboard-surface-1);
+  /* background: var(--dashboard-surface-1); */
   border-radius: var(--dashboard-card-radius);
   padding: var(--dashboard-card-padding);
 }

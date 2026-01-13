@@ -81,21 +81,54 @@ export interface RecentContentItem {
 }
 
 /**
- * Dữ liệu Analytics overview
- * Chỉ hiển thị signal đơn giản, không phân tích sâu
+ * Dữ liệu Traffic Overview (Level 1 & 3)
+ * Nguồn: Google Analytics 4
  */
-export interface AnalyticsData {
-  /** Lượt xem trang hôm nay */
-  todayPageviews: number;
-  /** Xu hướng so với hôm qua */
-  trend: 'up' | 'down' | 'stable';
-  /** Phần trăm thay đổi */
-  trendPercent: number;
-  /** Top nội dung được xem nhiều */
-  topContent: Array<{
-    title: string;
+export interface GAPerformanceData {
+  overview: {
+    totalUsers: {
+      value: number;
+      trend: 'up' | 'down' | 'stable';
+      percent: number;
+    };
+    sessions: {
+      value: number;
+      trend: 'up' | 'down' | 'stable';
+      percent: number;
+    };
+    pageViews: {
+      value: number;
+      trend: 'up' | 'down' | 'stable';
+      percent: number;
+    };
+    avgEngagementTime: {
+      value: number;
+      unit: string;
+      trend: 'stable' | 'up' | 'down';
+    };
+  };
+  /** Dữ liệu Line Chart cho Traffic Trend */
+  trafficTrend: {
+    labels: string[]; // Mon, Tue...
+    values: number[]; // Pageviews
+  };
+}
+
+/**
+ * Dữ liệu Content Performance (Level 2)
+ * Nguồn: Backend CMS + GA Metrics Sync
+ */
+export interface ContentPerformanceItem {
+  id: string;
+  title: string;
+  thumbnail: string; // 📸 Visual element
+  category: string;
+  status: 'draft' | 'published';
+  publishedAt: Date;
+  metrics: {
     views: number;
-  }>;
+    avgTime: number; // seconds
+  };
 }
 
 /**
@@ -119,9 +152,11 @@ export interface DraggableItem {
 export interface DashboardData {
   userContext: UserContext;
   stats: StatItem[];
-  recentContent: RecentContentItem[];
-  analytics: AnalyticsData;
+  recentContent: RecentContentItem[]; // Giữ lại cho section Recent
   draggableItems: DraggableItem[];
+  // New Analytics Architecture
+  gaPerformance: GAPerformanceData;
+  contentPerformance: ContentPerformanceItem[];
 }
 
 // =============================================================================
@@ -242,26 +277,56 @@ const mockRecentContent: RecentContentItem[] = [
   },
 ];
 
-/**
- * Dữ liệu Analytics
- * Chỉ mang tính signal, không phân tích sâu
- */
-const mockAnalytics: AnalyticsData = {
-  todayPageviews: 1247,
-  trend: 'up',
-  trendPercent: 12,
-  topContent: [
-    { title: 'Trang chủ', views: 523 },
-    { title: 'Sản phẩm Vitamin', views: 234 },
-    { title: 'Tin tức công ty', views: 189 },
-  ],
+const mockGAPerformance: GAPerformanceData = {
+  overview: {
+    totalUsers: { value: 1205, trend: 'up', percent: 12 },
+    sessions: { value: 3450, trend: 'up', percent: 5 },
+    pageViews: { value: 12450, trend: 'down', percent: -2 },
+    avgEngagementTime: { value: 145, unit: 'seconds', trend: 'stable' },
+  },
+  trafficTrend: {
+    labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+    values: [1200, 1500, 1800, 1400, 2000, 2500, 3000],
+  },
 };
 
-/**
- * Danh sách công việc trong Right Bar
- * Priority dùng để hiển thị dot màu nhỏ (theo Design Constitution)
- */
+const mockContentPerformance: ContentPerformanceItem[] = [
+  {
+    id: '1',
+    title: 'Hướng dẫn sử dụng Vitamin C đúng cách',
+    thumbnail:
+      'https://images.unsplash.com/photo-1511688878353-3a2f5be94c74?w=800&auto=format&fit=crop&q=60',
+    category: 'Sức khỏe',
+    status: 'published',
+    publishedAt: daysAgo(2),
+    metrics: { views: 5230, avgTime: 180 },
+  },
+  {
+    id: '2',
+    title: 'Top 5 loại thực phẩm chức năng cho người già',
+    thumbnail:
+      'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&auto=format&fit=crop&q=60',
+    category: 'Sản phẩm',
+    status: 'published',
+    publishedAt: daysAgo(5),
+    metrics: { views: 3120, avgTime: 240 },
+  },
+  {
+    id: '3',
+    title: 'Lịch nghỉ Tết Nguyên Đán 2026',
+    thumbnail:
+      'https://images.unsplash.com/photo-1543269664-7eef42226a21?w=800&auto=format&fit=crop&q=60',
+    category: 'Tin tức',
+    status: 'published',
+    publishedAt: daysAgo(1),
+    metrics: { views: 8900, avgTime: 60 },
+  },
+];
+
+// ... existing code ...
+
 const mockDraggableItems: DraggableItem[] = [
+  // ... existing items ...
   {
     id: '1',
     title: 'Review bài viết SEO sản phẩm mới',
@@ -294,20 +359,15 @@ const mockDraggableItems: DraggableItem[] = [
   },
 ];
 
-// =============================================================================
-// EXPORT - Xuất dữ liệu
-// =============================================================================
+// ... existing export ...
 
-/**
- * Dữ liệu Dashboard đầy đủ
- * UI components sẽ nhận data này qua useDashboardData hook
- */
 export const mockDashboardData: DashboardData = {
   userContext: mockUserContext,
   stats: mockStats,
   recentContent: mockRecentContent,
-  analytics: mockAnalytics,
   draggableItems: mockDraggableItems,
+  gaPerformance: mockGAPerformance,
+  contentPerformance: mockContentPerformance,
 };
 
 /**

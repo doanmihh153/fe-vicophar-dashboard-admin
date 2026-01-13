@@ -83,7 +83,8 @@ export function DashboardHomePage() {
            * 3 columns: Bar Chart + Donut + Top Content
            */}
           <AnalyticsOverview
-            analytics={data?.analytics}
+            gaPerformance={data?.gaPerformance}
+            contentPerformance={data?.contentPerformance}
             isLoading={isLoading}
           />
 
