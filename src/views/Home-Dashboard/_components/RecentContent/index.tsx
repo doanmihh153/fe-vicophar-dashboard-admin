@@ -22,7 +22,7 @@
 'use client';
 
 import React from 'react';
-import { RecentItem } from './RecentItem';
+import { RecentCard } from './RecentCard';
 import { Skeleton } from '@/components/ui/Skeleton';
 import type { RecentContentItem } from '../../_data';
 
@@ -67,37 +67,36 @@ const SKELETON_COUNT = 5;
 export function RecentContent({
   items,
   isLoading,
-  maxItems = 5,
+  maxItems = 6, // Tăng lên 6 để lấp đầy grid 3 cột (2 hàng)
 }: RecentContentProps) {
   return (
     <section>
       {/*
-       * Section Header - nhỏ, uppercase, tracking-widest
-       * mb-6 (24px) để tách khỏi list
+       * Section Header
        */}
-      <h2 className="text-muted-foreground/70 mb-6 text-xs font-medium tracking-widest uppercase">
-        Nội dung gần đây
-      </h2>
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-foreground font-display text-base tracking-widest uppercase">
+          Những bài viết gần đây
+        </h2>
+        {/* Có thể thêm View All Link ở đây nếu cần */}
+      </div>
 
-      {/* Items container - space-y-2 (8px) để tạo nhịp đọc */}
-      <div className="space-y-2">
+      {/*
+       * GRID LAYOUT
+       * Mobile: 1 cột
+       * Tablet: 2 cột
+       * Desktop: 3 cột
+       */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {isLoading
-          ? // Skeleton placeholders
-            Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-              <div key={i} className="flex items-center justify-between p-4">
-                <div className="flex-1">
-                  <Skeleton className="h-5 w-48 rounded-md" />
-                  <Skeleton className="mt-2 h-3 w-24 rounded-md" />
-                </div>
-                <Skeleton className="h-4 w-16 rounded-md" />
-              </div>
+          ? // Skeleton placeholders (Card shape)
+            Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="aspect-2/1 w-full rounded-2xl" />
             ))
-          : // Actual items - giới hạn theo maxItems
+          : // Actual items
             items
               ?.slice(0, maxItems)
-              .map((item) => (
-                <RecentItem key={item.id} item={item} isLoading={false} />
-              ))}
+              .map((item) => <RecentCard key={item.id} item={item} />)}
       </div>
     </section>
   );

@@ -126,7 +126,7 @@ export function PreviewCardTrigger({
   const { refs, getReferenceProps } = useContext(PreviewCardContext)!;
 
   // Merge refs (nếu children là React Element có ref sẵn)
-  // Ở đây ta bọc div cho an toàn
+  // Ở đây ta bọc div cho an toàn để đảm bảo Floating UI bắt được sự kiện hover
   return (
     <div
       ref={refs.setReference}
@@ -140,12 +140,13 @@ export function PreviewCardTrigger({
 
 // --- Portal ---
 export function PreviewCardPortal({ children }: { children: React.ReactNode }) {
-  // Dùng FloatingPortal để render ra ngoài DOM tree (tránh z-index hell)
+  // Dùng FloatingPortal để render ra ngoài DOM tree (cấp root body)
+  // Giúp tránh bị che bởi overflow:hidden của các container cha (z-index hell)
   return <FloatingPortal>{children}</FloatingPortal>;
 }
 
 // --- Positioner ---
-// Component này quản lý vị trí (Position)
+// Component này quản lý vị trí (Position) tọa độ X, Y
 export function PreviewCardPositioner({
   children,
   className,
@@ -162,7 +163,7 @@ export function PreviewCardPositioner({
         <div
           ref={refs.setFloating}
           style={{
-            position: strategy,
+            position: strategy, // absolute hoặc fixed
             top: y ?? 0,
             left: x ?? 0,
             width: 'max-content',
@@ -189,10 +190,11 @@ export function PreviewCardPopup({
 }) {
   return (
     <motion.div
+      // Animation: Bay lên nhẹ từ dưới (y: 5 -> y: 0) & Fade In
       initial={{ opacity: 0, scale: 0.95, y: 5 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 5 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }} // Hiệu ứng nảy nhẹ
       className={cn(
         'min-w-[300px] overflow-hidden rounded-3xl border border-white/10 bg-white/90 p-4 shadow-2xl backdrop-blur-xl dark:bg-black/90',
         className

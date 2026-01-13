@@ -72,6 +72,8 @@ export interface RecentContentItem {
   title: string;
   /** Loại nội dung */
   type: 'article' | 'product' | 'news';
+  /** Hình ảnh đại diện (Visual) */
+  thumbnail: string;
   /** Trạng thái: draft (nháp) hoặc published (đã xuất bản) */
   status: 'draft' | 'published';
   /** Thời gian tạo */
@@ -239,6 +241,8 @@ const mockRecentContent: RecentContentItem[] = [
     id: '1',
     title: 'Hướng dẫn sử dụng hệ thống quản lý kho mới',
     type: 'article',
+    thumbnail:
+      'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&auto=format&fit=crop&q=60',
     status: 'published',
     createdAt: daysAgo(0),
     href: '/cms/articles/1',
@@ -247,6 +251,8 @@ const mockRecentContent: RecentContentItem[] = [
     id: '2',
     title: 'Vitamin C 1000mg - Cập nhật thông tin sản phẩm',
     type: 'product',
+    thumbnail:
+      'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=60',
     status: 'draft',
     createdAt: daysAgo(1),
     href: '/cms/products/2',
@@ -255,6 +261,8 @@ const mockRecentContent: RecentContentItem[] = [
     id: '3',
     title: 'Thông báo nghỉ lễ Tết Nguyên Đán 2026',
     type: 'news',
+    thumbnail:
+      'https://images.unsplash.com/photo-1543269664-7eef42226a21?w=800&auto=format&fit=crop&q=60',
     status: 'published',
     createdAt: daysAgo(2),
     href: '/cms/news/3',
@@ -263,6 +271,8 @@ const mockRecentContent: RecentContentItem[] = [
     id: '4',
     title: 'Chương trình khuyến mãi tháng 1',
     type: 'news',
+    thumbnail:
+      'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&auto=format&fit=crop&q=60',
     status: 'draft',
     createdAt: daysAgo(3),
     href: '/cms/news/4',
@@ -271,6 +281,8 @@ const mockRecentContent: RecentContentItem[] = [
     id: '5',
     title: 'Cập nhật chính sách bảo hành sản phẩm',
     type: 'article',
+    thumbnail:
+      'https://images.unsplash.com/photo-1591348278863-ce32c7bd6cc9?w=800&auto=format&fit=crop&q=60',
     status: 'published',
     createdAt: daysAgo(5),
     href: '/cms/articles/5',

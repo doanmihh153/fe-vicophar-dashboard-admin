@@ -43,6 +43,10 @@ export function ContentCard({ item, rank }: ContentCardProps) {
 
   return (
     <PreviewCard>
+      {/*
+       * TRIGGER AREA: Card chính
+       * Sử dụng VisualCard (2:1) làm thành phần kích hoạt
+       */}
       <PreviewCardTrigger>
         <VisualCard
           title={item.title}
@@ -51,7 +55,7 @@ export function ContentCard({ item, rank }: ContentCardProps) {
           aspectRatio="2/1"
           badge={Badge}
         >
-          {/* Metrics in Footer Slot */}
+          {/* Slot Footer: Hiển thị nhanh số liệu (Views + Time) */}
           <div className="flex gap-3">
             <div className="flex items-center gap-1.5 text-xs font-medium text-white/90">
               <Eye className="h-3.5 w-3.5" />
@@ -65,15 +69,20 @@ export function ContentCard({ item, rank }: ContentCardProps) {
         </VisualCard>
       </PreviewCardTrigger>
 
+      {/*
+       * PREVIEW POPUP
+       * Hiển thị khi hover (Logic Floating UI)
+       * Mobile: w-[85vw] | Desktop: w-[320px]
+       */}
       <PreviewCardPortal>
         <PreviewCardPositioner>
-          <PreviewCardPopup className="w-[320px] p-4">
+          <PreviewCardPopup className="w-[85vw] p-4 sm:w-[320px]">
             <div className="flex flex-col gap-2">
               <div className="flex items-start justify-between">
                 <h4 className="text-foreground text-lg leading-tight font-bold">
                   {item.title}
                 </h4>
-                {/* Mini Status */}
+                {/* Badge trạng thái (Mini) */}
                 <span
                   className={cn(
                     'flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase',
@@ -86,11 +95,13 @@ export function ContentCard({ item, rank }: ContentCardProps) {
                 </span>
               </div>
 
+              {/* Metadata: Danh mục & Ngày đăng */}
               <p className="text-muted-foreground text-sm font-medium">
                 {item.category} •{' '}
                 {new Date(item.publishedAt).toLocaleDateString('vi-VN')}
               </p>
 
+              {/* Detailed Metrics Box */}
               <div className="mt-2 flex gap-3">
                 <div className="flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-1.5 dark:bg-slate-800">
                   <Eye className="h-4 w-4 text-slate-500" />
