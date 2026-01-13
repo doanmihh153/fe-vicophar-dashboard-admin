@@ -4,14 +4,10 @@
  * =============================================================================
  *
  * MÔ TẢ:
- *   Phần chào mừng với Lottie animation trong HomeMainHeader.
- *   Animation chỉ chạy 1 lần theo Design Constitution v1.
+ *   Block chào mừng theo Bento UI style.
+ *   Lottie animation fill toàn bộ chiều cao bên trái (như reference)
  *
- * NGUYÊN TẮC:
- *   - Không gradient text
- *   - Không emoji trong UI chính
- *   - Lottie loop = false (chạy 1 lần)
- *   - Typography theo hierarchy: page title 20-24px
+ * REFERENCE: Banana card - image fill height, tràn ra ngoài
  *
  * =============================================================================
  */
@@ -21,15 +17,15 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/Skeleton';
-import welcomeAnimation from '@/assets/lottie/Welcom-lottie.json';
+import supermanAnimation from '@/assets/lottie/Supperman-business.json';
 
 // =============================================================================
-// DYNAMIC IMPORT - Lottie (client-only)
+// DYNAMIC IMPORT
 // =============================================================================
 
 const Lottie = dynamic(() => import('lottie-react'), {
   ssr: false,
-  loading: () => <Skeleton className="h-full w-full rounded-md" />,
+  loading: () => <Skeleton className="h-full w-full rounded-xl" />,
 });
 
 // =============================================================================
@@ -37,11 +33,8 @@ const Lottie = dynamic(() => import('lottie-react'), {
 // =============================================================================
 
 interface WelcomeSectionProps {
-  /** Tên user để hiển thị trong lời chào */
   userName?: string;
-  /** Lời chào tùy theo thời điểm */
   greeting?: string;
-  /** Trạng thái loading - hiển thị skeleton */
   isLoading: boolean;
 }
 
@@ -50,68 +43,69 @@ interface WelcomeSectionProps {
 // =============================================================================
 
 /**
- * WelcomeSection - Phần chào mừng với animation
+ * WelcomeSection - Bento Block với image fill height
  *
- * Layout:
- * ┌─────────────────────────────────────────────────┐
- * │ [Lottie 80x80]  Xin chào, [userName]            │
- * │                 [greeting message]               │
- * └─────────────────────────────────────────────────┘
+ * Layout (như reference - banana card):
+ * ┌─────────────────────────────────────────────────────────┐
+ * │         │                                               │
+ * │ [Lottie │   Xin chào, Đoàn Minh                        │
+ * │  FILL   │   Chúc bạn một ngày...                       │
+ * │ HEIGHT] │                                               │
+ * └─────────────────────────────────────────────────────────┘
  */
 export function WelcomeSection({
   userName,
   greeting,
   isLoading,
 }: WelcomeSectionProps) {
-  // Track animation đã chạy chưa (chỉ chạy 1 lần theo Design Constitution)
   const [hasPlayed, setHasPlayed] = useState(false);
 
   return (
-    <div className="flex items-center gap-6">
-      {/*
-       * Lottie Animation Container
-       * Size: 80x80 (h-20 w-20 = 80px)
-       * Tuân thủ spacing system: 80 = 64 + 16
-       */}
-      <div className="h-20 w-20 shrink-0">
-        {isLoading ? (
-          <Skeleton className="h-full w-full rounded-md" />
-        ) : (
-          <Lottie
-            animationData={welcomeAnimation}
-            loop={true}
-            autoplay={!hasPlayed}
-            onComplete={() => setHasPlayed(true)}
-            className="h-full w-full"
-          />
-        )}
-      </div>
+    <div className="bento-block bento-block--header bento-block--welcome bento-pattern flex items-center overflow-hidden p-0">
+      {/* Grid 2 cột: Lottie fill left + Text với padding */}
+      <div className="grid h-full w-full grid-cols-[auto_1fr] items-center gap-4">
+        {/*
+         * Cột 1: Lottie Container
+         * - Dùng bento-lottie-square class (160x160px)
+         * - Có background nhẹ
+         */}
+        <div className="bento-lottie-square flex items-center justify-center">
+          {isLoading ? (
+            <Skeleton className="h-3/4 w-3/4 rounded-xl" />
+          ) : (
+            <Lottie
+              animationData={supermanAnimation}
+              loop={true}
+              autoplay={!hasPlayed}
+              onComplete={() => setHasPlayed(true)}
+              className="h-full w-full"
+            />
+          )}
+        </div>
 
-      {/*
-       * Text Content
-       * Typography: page title = 24px (text-2xl)
-       * Greeting: muted-foreground, 16px (text-base)
-       */}
-      <div className="space-y-1">
-        {isLoading ? (
-          <>
-            {/* Skeleton cho title */}
-            <Skeleton className="h-8 w-48 rounded-md" />
-            {/* Skeleton cho greeting */}
-            <Skeleton className="h-4 w-64 rounded-md" />
-          </>
-        ) : (
-          <>
-            <h1 className="text-2xl font-medium">
-              {/* Dùng font-signature cho "Xin chào" theo design ban đầu */}
-              <span className="font-signature text-muted-foreground">
-                Xin chào,
-              </span>{' '}
-              <span className="text-foreground">{userName}</span>
-            </h1>
-            <p className="text-muted-foreground text-base">{greeting}</p>
-          </>
-        )}
+        {/*
+         * Cột 2: Text Content
+         * - Có padding riêng
+         * - Căn giữa vertical
+         */}
+        <div className="flex flex-col justify-center space-y-2 p-6">
+          {isLoading ? (
+            <>
+              <Skeleton className="h-9 w-56 rounded-lg" />
+              <Skeleton className="h-5 w-72 rounded-lg" />
+            </>
+          ) : (
+            <>
+              <h1 className="text-3xl font-semibold tracking-tight">
+                <span className="font-signature text-muted-foreground">
+                  Xin chào,
+                </span>{' '}
+                <span className="text-foreground">{userName}</span>
+              </h1>
+              <p className="text-muted-foreground text-lg">{greeting}</p>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

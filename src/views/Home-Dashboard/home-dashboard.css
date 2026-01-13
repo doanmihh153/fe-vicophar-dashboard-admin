@@ -41,6 +41,15 @@
   --dashboard-accent-danger: oklch(0.6 0.16 25); /* Rose danger */
 
   /*
+   * Bento Colorful Backgrounds - Màu sắc cho header blocks
+   * Inspired by reference: Green, Blue, Pink blocks
+   */
+  --bento-welcome-bg: oklch(0.55 0.16 145); /* Green - Emerald */
+  --bento-welcome-text: oklch(1 0 0); /* White text */
+  --bento-context-bg: oklch(0.65 0.12 240); /* Blue - Sky */
+  --bento-context-text: oklch(1 0 0); /* White text */
+
+  /*
    * Icon colors - Màu cho các icon 3D/colorful
    */
   --dashboard-icon-news: oklch(0.55 0.18 160); /* Teal cho Tin tức */
@@ -67,6 +76,10 @@
   /* Accent colors - tăng lightness cho dark mode */
   --dashboard-accent-primary: oklch(0.65 0.14 160);
   --dashboard-accent-secondary: oklch(0.75 0.1 85);
+
+  /* Bento Colorful - điều chỉnh cho dark mode */
+  --bento-welcome-bg: oklch(0.45 0.14 145); /* Darker green */
+  --bento-context-bg: oklch(0.5 0.1 240); /* Darker blue */
 }
 
 /* ==========================================================================
@@ -80,6 +93,126 @@
 }
 
 .dashboard-section--elevated {
+  background: var(--dashboard-surface-2);
+}
+
+/* ==========================================================================
+   BENTO BLOCK UTILITIES - Khối đồng nhất cho từng row
+   ========================================================================== */
+
+/*
+ * Bento Row: Các blocks trên cùng 1 row phải có height bằng nhau
+ * Sử dụng: thêm class này vào parent grid
+ */
+.bento-row {
+  display: grid;
+  align-items: stretch; /* Đảm bảo các block có height bằng nhau */
+}
+
+/*
+ * Bento Block: Block cơ bản - dùng cho tất cả compartments
+ * - Kế thừa từ dashboard-section
+ * - Thêm min-height để đồng bộ trong row
+ */
+.bento-block {
+  background: var(--sidebar);
+  border-radius: var(--dashboard-card-radius);
+  padding: var(--dashboard-card-padding);
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * Header Row Blocks - Fixed height cho đồng bộ
+ * Welcome + ContextQuickPanel dùng class này
+ * Dùng height thay vì min-height để children kế thừa được
+ */
+.bento-block--header {
+  min-height: 160px; /* Fixed height để children kế thừa */
+}
+
+/*
+ * Bento Block Welcome - Green background
+ */
+.bento-block--welcome {
+  background: var(--bento-welcome-bg);
+  color: var(--bento-welcome-text);
+}
+
+.bento-block--welcome h1,
+.bento-block--welcome p,
+.bento-block--welcome span {
+  color: var(--bento-welcome-text);
+}
+
+/*
+ * Bento Block Context - Blue background
+ */
+.bento-block--context {
+  background: var(--bento-context-bg);
+  color: var(--bento-context-text);
+}
+
+.bento-block--context h3,
+.bento-block--context span {
+  color: var(--bento-context-text);
+}
+
+/*
+ * Bento Pattern Overlay - Subtle diagonal lines effect
+ * Dùng position: relative trên parent + ::before pseudo-element
+ */
+.bento-pattern {
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0px 1px,
+    transparent 1px 8px
+  );
+  mask-image: radial-gradient(
+    ellipse 80% 50% at 0% 0%,
+    #000 70%,
+    transparent 155%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Đảm bảo content nằm trên pattern */
+.bento-pattern > * {
+  position: relative;
+  z-index: 2;
+}
+
+/*
+ * Bento Lottie Square - Ô vuông cho animation/image
+ * Dùng calc trực tiếp từ header height
+ */
+.bento-lottie-square {
+  /* Ô vuông: width = height */
+  min-width: 160px;
+  max-width: 230;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  /* Ko cần aspect-ratio vì đã fix cả 2 chiều */
+}
+
+/*
+ * Bento Item - Các items nhỏ trong block (VD: pills trong ContextQuickPanel)
+ */
+.bento-item {
+  border-radius: 9999px; /* Rounded full - pill style */
+  transition: background-color 150ms ease;
+}
+
+.bento-item:hover {
   background: var(--dashboard-surface-2);
 }
 

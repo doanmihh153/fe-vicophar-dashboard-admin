@@ -26,7 +26,7 @@ const Lottie = dynamic(() => import('lottie-react'), {
 });
 
 // Import animation data
-import supermanAnimation from '@/assets/lottie/Supperman-business.json';
+import welcomeAnimation from '@/assets/lottie/Welcom-lottie.json';
 
 // ============================================
 // CÂU CỔ VŨ CHO ADMIN
@@ -98,7 +98,7 @@ export function MotionNav({ isCollapsed = false }: MotionNavProps) {
         style={{ aspectRatio: '1.8 / 1' }}
       >
         <Lottie
-          animationData={supermanAnimation}
+          animationData={welcomeAnimation}
           loop
           autoplay
           style={{ width: '100%', height: '100%' }}

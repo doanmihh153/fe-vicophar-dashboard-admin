@@ -56,7 +56,7 @@ export function DashboardHomePage() {
        * Layout với section stacking rõ ràng
        * Mỗi section có background separation
        */}
-      <div className="p-6 lg:p-8">
+      <div className="p-2">
         <div className="space-y-8">
           {/*
            * ===============================================
