@@ -1,0 +1,190 @@
+/**
+ * =============================================================================
+ * FILE: home-dashboard.css
+ * =============================================================================
+ *
+ * MÔ TẢ:
+ *   CSS riêng cho Home Dashboard.
+ *   Chứa CSS variables cho màu sắc và spacing - KHÔNG hardcode.
+ *   Dễ dàng customize bởi user.
+ *
+ * NGUYÊN TẮC:
+ *   - Tất cả màu sắc đều là CSS variables
+ *   - Sử dụng OKLCH để tương thích với theme hiện tại
+ *   - Có thể override bằng data-theme
+ *
+ * =============================================================================
+ */
+
+/* ==========================================================================
+   DESIGN TOKENS - MÀU SẮC CHO DASHBOARD
+   ========================================================================== */
+
+:root {
+  /*
+   * Surface colors - Background cho các sections
+   * Dựa trên --background, điều chỉnh lightness
+   */
+  --dashboard-surface-0: oklch(0.98 0.005 250); /* Base - rất nhạt */
+  --dashboard-surface-1: oklch(1 0 0); /* Card background - trắng */
+  --dashboard-surface-2: oklch(0.96 0.01 250); /* Elevated - subtle tint */
+
+  /*
+   * Accent colors - Màu nhấn cho icons và highlights
+   * Inspired by reference images (Donezo green + warm accent)
+   */
+  --dashboard-accent-primary: oklch(0.55 0.15 160); /* Teal/Green chính */
+  --dashboard-accent-secondary: oklch(0.7 0.12 85); /* Yellow/Gold ấm */
+  --dashboard-accent-tertiary: oklch(0.6 0.14 250); /* Blue cho neutral */
+  --dashboard-accent-success: oklch(0.65 0.16 145); /* Emerald success */
+  --dashboard-accent-warning: oklch(0.7 0.14 60); /* Amber warning */
+  --dashboard-accent-danger: oklch(0.6 0.16 25); /* Rose danger */
+
+  /*
+   * Icon colors - Màu cho các icon 3D/colorful
+   */
+  --dashboard-icon-news: oklch(0.55 0.18 160); /* Teal cho Tin tức */
+  --dashboard-icon-articles: oklch(0.6 0.16 250); /* Blue cho Bài viết */
+  --dashboard-icon-products: oklch(0.65 0.14 145); /* Green cho Sản phẩm */
+  --dashboard-icon-drafts: oklch(0.7 0.12 60); /* Amber cho Bản nháp */
+
+  /*
+   * Spacing variables đặc biệt cho Dashboard
+   */
+  --dashboard-section-gap: 32px;
+  --dashboard-card-padding: 24px;
+  --dashboard-card-radius: 16px;
+}
+
+/*
+ * Dark mode overrides
+ */
+[data-theme='dark'] {
+  --dashboard-surface-0: oklch(0.18 0.01 250);
+  --dashboard-surface-1: oklch(0.22 0.015 250);
+  --dashboard-surface-2: oklch(0.25 0.02 250);
+
+  /* Accent colors - tăng lightness cho dark mode */
+  --dashboard-accent-primary: oklch(0.65 0.14 160);
+  --dashboard-accent-secondary: oklch(0.75 0.1 85);
+}
+
+/* ==========================================================================
+   SECTION CONTAINERS - Background separation
+   ========================================================================== */
+
+.dashboard-section {
+  background: var(--dashboard-surface-1);
+  border-radius: var(--dashboard-card-radius);
+  padding: var(--dashboard-card-padding);
+}
+
+.dashboard-section--elevated {
+  background: var(--dashboard-surface-2);
+}
+
+/* ==========================================================================
+   STAT CARDS - Với accent backgrounds
+   ========================================================================== */
+
+.stat-card {
+  background: var(--dashboard-surface-1);
+  border-radius: var(--dashboard-card-radius);
+  transition: background-color 150ms ease;
+}
+
+.stat-card:hover {
+  background: var(--dashboard-surface-2);
+}
+
+/* Accent variants cho mỗi stat type */
+.stat-card--news {
+  background: linear-gradient(
+    135deg,
+    oklch(0.55 0.08 160 / 0.1) 0%,
+    transparent 100%
+  );
+}
+
+.stat-card--articles {
+  background: linear-gradient(
+    135deg,
+    oklch(0.6 0.08 250 / 0.1) 0%,
+    transparent 100%
+  );
+}
+
+.stat-card--products {
+  background: linear-gradient(
+    135deg,
+    oklch(0.65 0.08 145 / 0.1) 0%,
+    transparent 100%
+  );
+}
+
+.stat-card--drafts {
+  background: linear-gradient(
+    135deg,
+    oklch(0.7 0.06 60 / 0.1) 0%,
+    transparent 100%
+  );
+}
+
+/* ==========================================================================
+   ANALYTICS CHART - SVG styling
+   ========================================================================== */
+
+.analytics-bar {
+  fill: var(--dashboard-accent-primary);
+  transition:
+    fill 150ms ease,
+    opacity 150ms ease;
+}
+
+.analytics-bar:hover {
+  opacity: 0.8;
+}
+
+.analytics-bar--inactive {
+  fill: oklch(0.85 0.02 250);
+}
+
+[data-theme='dark'] .analytics-bar--inactive {
+  fill: oklch(0.35 0.02 250);
+}
+
+/* ==========================================================================
+   ICON UTILITIES
+   ========================================================================== */
+
+.icon-news {
+  color: var(--dashboard-icon-news);
+}
+.icon-articles {
+  color: var(--dashboard-icon-articles);
+}
+.icon-products {
+  color: var(--dashboard-icon-products);
+}
+.icon-drafts {
+  color: var(--dashboard-icon-drafts);
+}
+
+/* ==========================================================================
+   ANIMATION - Subtle entrance
+   ========================================================================== */
+
+@keyframes dashboard-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-animate-in {
+  animation: dashboard-fade-in 300ms ease-out;
+}

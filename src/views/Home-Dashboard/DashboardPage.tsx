@@ -5,19 +5,18 @@
  *
  * MÔ TẢ:
  *   Container chính cho trang Home Dashboard.
- *   Đây là Smart Component - chỉ quản lý data flow và layout.
+ *   Smart Component - quản lý data flow và layout.
  *
- * VAI TRÒ:
- *   - Fetch data thông qua useDashboardData hook
- *   - Phân phối data xuống các component con qua props
- *   - Định nghĩa layout grid chính
- *   - Inject content vào RightPanelSlot
- *
- * NGUYÊN TẮC (theo Design Constitution v1):
- *   - Không chứa logic UI phức tạp
- *   - Không style inline (trừ layout grid)
- *   - Data từ hook → props → UI components
- *   - Spacing: 32px (gap-8) cho section, 48px (p-12) cho page padding
+ * LAYOUT (Phase 5 - Redesigned):
+ *   ┌─────────────────────────────────────────────────────────────────────────┐
+ *   │  Header (Welcome + Context Stats)                                       │
+ *   ├─────────────────────────────────────────────────────────────────────────┤
+ *   │  StatCards (Grid 4 cột với icons)                                       │
+ *   ├─────────────────────────────────────────────────────────────────────────┤
+ *   │  Analytics (Full-width với charts)                                      │
+ *   ├─────────────────────────────────────────────────────────────────────────┤
+ *   │  RecentContent (Cards)                                                  │
+ *   └─────────────────────────────────────────────────────────────────────────┘
  *
  * =============================================================================
  */
@@ -27,6 +26,9 @@
 import React from 'react';
 import { RightPanelSlot } from '@/components/providers/RightPanelContext';
 import { useDashboardData } from './_hooks';
+
+// Import CSS riêng cho Dashboard
+import './home-dashboard.css';
 
 // Import tất cả components
 import {
@@ -41,28 +43,6 @@ import {
 // COMPONENT
 // =============================================================================
 
-/**
- * Home Dashboard Page
- *
- * Layout:
- * ┌─────────────────────────────────────────────────────┐
- * │  MAIN CONTENT (trong MainContent area của layout)  │
- * │  ┌─────────────────────────────────────────────┐   │
- * │  │ HomeMainHeader (Welcome + Context Panel)    │   │
- * │  ├─────────────────────────────────────────────┤   │
- * │  │ StatOverview (Grid 4 cột)                   │   │
- * │  ├─────────────────────────────────────────────┤   │
- * │  │ RecentContent    │  AnalyticsOverview       │   │
- * │  │ (2fr)            │  (1fr)                   │   │
- * │  └─────────────────────────────────────────────┘   │
- * └─────────────────────────────────────────────────────┘
- *
- * RIGHT BAR (inject qua RightPanelSlot):
- * ┌─────────────────────┐
- * │ DraggableItemList   │
- * │ CalendarPanel       │
- * └─────────────────────┘
- */
 export function DashboardHomePage() {
   // Fetch data từ hook
   const { data, isLoading } = useDashboardData();
@@ -73,21 +53,11 @@ export function DashboardHomePage() {
        * =====================================================
        * MAIN CONTENT AREA
        * =====================================================
-       *
-       * Layout CSS Grid:
-       * - Page padding: 48px (p-12 trên desktop), 24px (p-6 trên mobile)
-       * - Section gap: 32px (gap-8)
-       *
-       * Tuân thủ Spacing System: 4/8/12/16/24/32/48/64
+       * Layout với section stacking rõ ràng
+       * Mỗi section có background separation
        */}
-      <div className="p-6 lg:p-12">
-        {/*
-         * Vertical Rhythm: space-y thay vì gap để kiểm soát từng section
-         * Welcome: mb-12 (48px) - entry point cần breathing room
-         * Stat: mt-0 (nối liền visual với welcome greeting)
-         * Content: mt-12 (48px) - tách khỏi stat overview
-         */}
-        <div className="space-y-12">
+      <div className="p-6 lg:p-8">
+        <div className="space-y-8">
           {/*
            * ===============================================
            * ROW 1: Main Header (Welcome + Context Panel)
@@ -100,31 +70,29 @@ export function DashboardHomePage() {
 
           {/*
            * ===============================================
-           * ROW 2: Stat Overview (Grid 4 cột)
+           * ROW 2: Stat Overview (Grid 4 cột với icons)
            * ===============================================
-           * Margin-top nhỏ hơn để liền với welcome section
-           * Tạo cảm giác "context → data" liền mạch
+           * Mỗi card có rounded corners và background
            */}
-          <div className="-mt-4">
-            <StatOverview stats={data?.stats} isLoading={isLoading} />
-          </div>
+          <StatOverview stats={data?.stats} isLoading={isLoading} />
 
           {/*
            * ===============================================
-           * ROW 3: Recent Content + Analytics (Grid 2 cột)
+           * ROW 3: Analytics (Full-width với charts)
            * ===============================================
-           *
-           * Layout: [2fr 1fr]
-           * - RecentContent chiếm 2 phần
-           * - AnalyticsOverview chiếm 1 phần
+           * 3 columns: Bar Chart + Donut + Top Content
            */}
-          <div className="grid gap-12 lg:grid-cols-[2fr_1fr]">
-            <RecentContent items={data?.recentContent} isLoading={isLoading} />
-            <AnalyticsOverview
-              analytics={data?.analytics}
-              isLoading={isLoading}
-            />
-          </div>
+          <AnalyticsOverview
+            analytics={data?.analytics}
+            isLoading={isLoading}
+          />
+
+          {/*
+           * ===============================================
+           * ROW 4: Recent Content
+           * ===============================================
+           */}
+          <RecentContent items={data?.recentContent} isLoading={isLoading} />
         </div>
       </div>
 
@@ -132,9 +100,6 @@ export function DashboardHomePage() {
        * =====================================================
        * RIGHT BAR CONTENT
        * =====================================================
-       *
-       * Inject vào RightPanelSlot (thay thế default RightPanelContent)
-       * Chứa: DraggableItemList + CalendarPanel
        */}
       <RightPanelSlot>
         <RightBarContent items={data?.draggableItems} isLoading={isLoading} />

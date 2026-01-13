@@ -4,18 +4,23 @@
  * =============================================================================
  *
  * MÔ TẢ:
- *   Card hiển thị một số liệu thống kê trong StatOverview.
- *   Mỗi card là entry point để điều hướng đến trang chi tiết.
+ *   Card hiển thị một số liệu thống kê với icon colorful.
+ *   Inspired by: Donezo Dashboard với colored stat cards.
  *
- * INTERACTION (theo Design Constitution v1):
- *   - Hover: bg-muted/50, transition 150ms
- *   - Arrow indicator xuất hiện khi hover (opacity transition)
- *   - Không scale, không bounce, không shadow
+ * LAYOUT (theo reference):
+ *   ┌─────────────────────────────┐
+ *   │  [Icon]                  →  │
+ *   │                             │
+ *   │  24                         │
+ *   │  Tin tức                    │
+ *   │  ↑ Increased from last...  │
+ *   └─────────────────────────────┘
  *
- * TYPOGRAPHY:
- *   - Label: text-sm (14px), muted-foreground
- *   - Value: text-3xl (30px), tabular-nums
- *   - Arrow: muted-foreground, transition opacity
+ * FEATURES:
+ *   - Icon với màu sắc khác nhau cho từng type
+ *   - Rounded corner background (dashboard-section)
+ *   - Hover effect subtle
+ *   - Trend indicator
  *
  * =============================================================================
  */
@@ -24,6 +29,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Newspaper, FileText, Package, FileEdit } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import type { StatItem } from '../../_data';
 
@@ -39,27 +45,71 @@ interface StatCardProps {
 }
 
 // =============================================================================
-// COMPONENT
+// ICON CONFIG
 // =============================================================================
 
 /**
- * StatCard - Card thống kê đơn lẻ
- *
- * Layout:
- * ┌─────────────────────────────┐
- * │ Label (Tin tức)             │
- * │ 24                       →  │
- * └─────────────────────────────┘
- *
- * Hover: bg-muted/50, arrow xuất hiện
+ * Map icon và colors theo stat id
+ * Inspired by reference: mỗi card có accent color riêng
  */
+const STAT_ICONS: Record<
+  string,
+  {
+    Icon: React.ComponentType<{ className?: string }>;
+    bgClass: string;
+    iconClass: string;
+  }
+> = {
+  news: {
+    Icon: Newspaper,
+    bgClass: 'bg-teal-100 dark:bg-teal-900/30',
+    iconClass: 'text-teal-600 dark:text-teal-400',
+  },
+  articles: {
+    Icon: FileText,
+    bgClass: 'bg-blue-100 dark:bg-blue-900/30',
+    iconClass: 'text-blue-600 dark:text-blue-400',
+  },
+  products: {
+    Icon: Package,
+    bgClass: 'bg-emerald-100 dark:bg-emerald-900/30',
+    iconClass: 'text-emerald-600 dark:text-emerald-400',
+  },
+  drafts: {
+    Icon: FileEdit,
+    bgClass: 'bg-amber-100 dark:bg-amber-900/30',
+    iconClass: 'text-amber-600 dark:text-amber-400',
+  },
+};
+
+// Default icon config
+const DEFAULT_ICON = {
+  Icon: FileText,
+  bgClass: 'bg-muted',
+  iconClass: 'text-muted-foreground',
+};
+
+// =============================================================================
+// COMPONENT
+// =============================================================================
+
 export function StatCard({ stat, isLoading }: StatCardProps) {
-  // Nếu loading, render skeleton
+  // Lấy icon config based on stat.id
+  const iconConfig = STAT_ICONS[stat.id] || DEFAULT_ICON;
+  const { Icon, bgClass, iconClass } = iconConfig;
+
+  // Nếu loading, render skeleton với card layout
   if (isLoading) {
     return (
-      <div className="p-6">
-        <Skeleton className="mb-2 h-4 w-16 rounded-md" />
-        <Skeleton className="h-8 w-12 rounded-md" />
+      <div className="dashboard-section p-6">
+        <div className="flex items-start justify-between">
+          <Skeleton className="h-10 w-10 rounded-xl" />
+          <Skeleton className="h-4 w-4 rounded" />
+        </div>
+        <div className="mt-6">
+          <Skeleton className="h-9 w-16 rounded-md" />
+          <Skeleton className="mt-2 h-4 w-20 rounded-md" />
+        </div>
       </div>
     );
   }
@@ -67,19 +117,37 @@ export function StatCard({ stat, isLoading }: StatCardProps) {
   return (
     <Link
       href={stat.href}
-      className="group hover:bg-muted/50 block p-6 transition-colors duration-150"
+      className="dashboard-section group block p-6 transition-all duration-150 hover:scale-[1.02]"
     >
-      {/* Label */}
-      <span className="text-muted-foreground text-sm">{stat.label}</span>
+      {/* Row 1: Icon + Arrow */}
+      <div className="flex items-start justify-between">
+        {/* Icon with colored background */}
+        <div
+          className={`flex h-10 w-10 items-center justify-center rounded-xl ${bgClass}`}
+        >
+          <Icon className={`h-5 w-5 ${iconClass}`} />
+        </div>
 
-      {/* Value + Arrow */}
-      <div className="mt-1 flex items-baseline gap-2">
-        {/* Số liệu - tabular-nums để căn đều */}
-        <span className="text-3xl font-medium tabular-nums">{stat.value}</span>
-
-        {/* Arrow indicator - chỉ hiện khi hover */}
+        {/* Arrow indicator */}
         <span className="text-muted-foreground opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-          →
+          ↗
+        </span>
+      </div>
+
+      {/* Row 2: Value + Label */}
+      <div className="mt-6">
+        <span className="text-3xl font-semibold tabular-nums">
+          {stat.value}
+        </span>
+        <span className="text-muted-foreground mt-1 block text-sm">
+          {stat.label}
+        </span>
+      </div>
+
+      {/* Row 3: Trend indicator (optional) */}
+      <div className="mt-2">
+        <span className="text-xs text-emerald-600 dark:text-emerald-400">
+          ↑ Tăng so với tháng trước
         </span>
       </div>
     </Link>

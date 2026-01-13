@@ -5,17 +5,16 @@
  *
  * MÔ TẢ:
  *   Section hiển thị tổng quan các số liệu thống kê.
- *   Grid 4 cột trên desktop, 2 cột trên tablet, 1 cột trên mobile.
+ *   Grid 4 cột với cards có rounded corners và backgrounds.
  *
- * LAYOUT:
- *   - Responsive: sm:grid-cols-2 lg:grid-cols-4
- *   - Gap: 16px (gap-4)
- *   - Section title: uppercase, tracking-wide, 12-14px
- *
- * NGUYÊN TẮC:
- *   - Không chứa business logic
- *   - Map data từ props xuống StatCard
- *   - Xử lý loading với skeleton placeholders
+ * LAYOUT (inspired by reference):
+ *   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+ *   │ [Icon]    ↗  │  │ [Icon]    ↗  │  │ [Icon]    ↗  │  │ [Icon]    ↗  │
+ *   │              │  │              │  │              │  │              │
+ *   │ 24           │  │ 156          │  │ 89           │  │ 12           │
+ *   │ Tin tức      │  │ Bài viết     │  │ Sản phẩm     │  │ Bản nháp     │
+ *   │ ↑ Tăng...    │  │ ↑ Tăng...    │  │ ↑ Tăng...    │  │ ↑ Giảm...    │
+ *   └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
  *
  * =============================================================================
  */
@@ -41,31 +40,12 @@ interface StatOverviewProps {
 // COMPONENT
 // =============================================================================
 
-/**
- * StatOverview - Section tổng quan số liệu
- *
- * Layout:
- * ┌─────────────────────────────────────────────────────────────────────────┐
- * │ TỔNG QUAN                                                               │
- * ├─────────────────┬─────────────────┬─────────────────┬─────────────────┤
- * │ Tin tức         │ Bài viết        │ Sản phẩm        │ Bản nháp        │
- * │ 24              │ 156             │ 89              │ 12              │
- * └─────────────────┴─────────────────┴─────────────────┴─────────────────┘
- */
 export function StatOverview({ stats, isLoading }: StatOverviewProps) {
   // Dùng placeholders khi loading để giữ layout ổn định
   const displayStats = stats ?? STAT_PLACEHOLDERS;
 
   return (
     <section>
-      {/*
-       * Section Header - nhỏ, uppercase, tracking-wide
-       * mb-6 (24px) để tách khỏi grid
-       */}
-      <h2 className="text-muted-foreground/70 mb-6 text-xs font-medium tracking-widest uppercase">
-        Tổng quan
-      </h2>
-
       {/* Grid container - responsive 4 → 2 → 1 cột */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {displayStats.map((stat) => (
