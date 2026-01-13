@@ -57,7 +57,7 @@ export function DashboardHomePage() {
        * Mỗi section có background separation
        */}
       <div className="p-2">
-        <div className="space-y-8">
+        <div className="space-y-4">
           {/*
            * ===============================================
            * ROW 1: Main Header (Welcome + Context Panel)

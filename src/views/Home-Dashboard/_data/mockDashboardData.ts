@@ -49,6 +49,16 @@ export interface StatItem {
   value: number;
   /** Link điều hướng khi click */
   href: string;
+  /** Màu sắc Icon/Text (Hex) */
+  color?: string;
+  /** Màu nền Card (Hex/Var) */
+  bgColor?: string;
+  /** Tùy chỉnh class Tailwind cho background (ghi đè bgColor) */
+  className?: string;
+  /** Tùy chỉnh class Tailwind cho Icon/Text (ghi đè color) */
+  iconClassName?: string;
+  /** Tùy chỉnh class Tailwind cho Pattern Dots (dùng text-color) */
+  patternClassName?: string;
 }
 
 /**

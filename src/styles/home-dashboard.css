@@ -21,6 +21,9 @@
    ========================================================================== */
 @theme {
   --color-button-header: var(--bento-welcome-bg);
+
+  /* Star Card */
+  --color-star-card-one: var(--star-card-one);
 }
 
 :root {
@@ -66,6 +69,8 @@
   --dashboard-section-gap: 32px;
   --dashboard-card-padding: 12px;
   --dashboard-card-radius: 16px;
+
+  --star-card-one: #f7b731;
 }
 
 /*
@@ -83,6 +88,9 @@
   /* Bento Colorful - điều chỉnh cho dark mode */
   --bento-welcome-bg: #218c74; /* Darker green */
   --bento-context-bg: #227093; /* Darker blue */
+
+  /* Star Card */
+  --star-card-one: #fa8231;
 }
 
 /* ==========================================================================
@@ -223,93 +231,6 @@
 }
 
 /* ==========================================================================
-   STAT CARDS - Với accent backgrounds
-   ========================================================================== */
-
-.stat-card {
-  background: var(--dashboard-surface-1);
-  border-radius: var(--dashboard-card-radius);
-  transition: background-color 150ms ease;
-}
-
-.stat-card:hover {
-  background: var(--dashboard-surface-2);
-}
-
-/* Accent variants cho mỗi stat type */
-.stat-card--news {
-  background: linear-gradient(
-    135deg,
-    oklch(0.55 0.08 160 / 0.1) 0%,
-    transparent 100%
-  );
-}
-
-.stat-card--articles {
-  background: linear-gradient(
-    135deg,
-    oklch(0.6 0.08 250 / 0.1) 0%,
-    transparent 100%
-  );
-}
-
-.stat-card--products {
-  background: linear-gradient(
-    135deg,
-    oklch(0.65 0.08 145 / 0.1) 0%,
-    transparent 100%
-  );
-}
-
-.stat-card--drafts {
-  background: linear-gradient(
-    135deg,
-    oklch(0.7 0.06 60 / 0.1) 0%,
-    transparent 100%
-  );
-}
-
-/* ==========================================================================
-   ANALYTICS CHART - SVG styling
-   ========================================================================== */
-
-.analytics-bar {
-  fill: var(--dashboard-accent-primary);
-  transition:
-    fill 150ms ease,
-    opacity 150ms ease;
-}
-
-.analytics-bar:hover {
-  opacity: 0.8;
-}
-
-.analytics-bar--inactive {
-  fill: oklch(0.85 0.02 250);
-}
-
-[data-theme='dark'] .analytics-bar--inactive {
-  fill: oklch(0.35 0.02 250);
-}
-
-/* ==========================================================================
-   ICON UTILITIES
-   ========================================================================== */
-
-.icon-news {
-  color: var(--dashboard-icon-news);
-}
-.icon-articles {
-  color: var(--dashboard-icon-articles);
-}
-.icon-products {
-  color: var(--dashboard-icon-products);
-}
-.icon-drafts {
-  color: var(--dashboard-icon-drafts);
-}
-
-/* ==========================================================================
    ANIMATION - Subtle entrance
    ========================================================================== */
 
@@ -391,4 +312,62 @@
 
 [data-theme='dark'] .watermark-card--pending {
   background: linear-gradient(135deg, #be123c 0%, #881337 100%);
+}
+
+/* ==========================================================================
+   STAT CARD 3D (Refactor for StatOverview)
+   ========================================================================== */
+
+.stat-card-3d {
+  position: relative;
+  overflow: hidden;
+  /* background removed to allow tailwind override via className */
+  border-radius: 20px; /* More rounded */
+  padding: 24px;
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy effect */
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+}
+
+.stat-card-3d:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08);
+  /* border-color: var(--dashboard-border); */
+  z-index: 10;
+}
+
+/* Background Pattern (Dots) */
+.stat-card-3d-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(to bottom right, black, transparent 80%);
+  pointer-events: none;
+}
+
+/* 3D Icon - Floating Effect */
+.stat-card-3d-icon {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  min-width: 100px;
+  min-height: 100px;
+  max-width: 250px !important;
+  max-height: 250px !important;
+  transform: rotate(-15deg);
+  transition: all 400ms ease;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.stat-card-3d:hover .stat-card-3d-icon {
+  transform: rotate(0deg) scale(1.1) translate(-10px, -10px);
+  opacity: 1;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
 }

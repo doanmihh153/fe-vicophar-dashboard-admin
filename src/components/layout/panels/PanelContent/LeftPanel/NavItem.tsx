@@ -46,7 +46,7 @@ export function NavItem({
         isCollapsed ? 'justify-center gap-0' : 'gap-2'
       } ${
         isActive
-          ? 'bg-sidebar! text-sidebar-text-heading cursor-default py-4 font-semibold'
+          ? 'bg-sidebar! text-button-header cursor-default py-4 font-semibold'
           : 'text-muted-foreground hover:bg-sidebar! hover:text-accent-foreground mr-2! rounded-lg!'
       } `}
       /*
