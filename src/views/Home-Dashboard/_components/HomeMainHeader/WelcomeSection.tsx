@@ -61,15 +61,19 @@ export function WelcomeSection({
   const [hasPlayed, setHasPlayed] = useState(false);
 
   return (
-    <div className="bento-block bento-block--header bento-block--welcome bento-pattern flex items-center overflow-hidden p-0">
-      {/* Grid 2 cột: Lottie fill left + Text với padding */}
-      <div className="grid h-full w-full grid-cols-[auto_1fr] items-center gap-4">
+    <div className="bento-block bento-block--header bento-block--welcome bento-pattern flex items-center justify-center overflow-hidden p-0">
+      {/* 
+        Responsive Layout:
+        - Mobile: Flex Column (stack dọc)
+        - Desktop (lg): Grid 2 cột (auto 1fr)
+      */}
+      <div className="flex w-full flex-col items-center gap-4 lg:grid lg:grid-cols-[auto_1fr]">
         {/*
          * Cột 1: Lottie Container
-         * - Dùng bento-lottie-square class (160x160px)
-         * - Có background nhẹ
+         * - Mobile: Full width/height adjusted
+         * - Desktop: Fixed square/ratio defined by CSS
          */}
-        <div className="bento-lottie-square flex items-center justify-center">
+        <div className="bento-lottie-square flex shrink-0 items-center justify-center">
           {isLoading ? (
             <Skeleton className="h-3/4 w-3/4 rounded-xl" />
           ) : (
@@ -85,10 +89,10 @@ export function WelcomeSection({
 
         {/*
          * Cột 2: Text Content
-         * - Có padding riêng
-         * - Căn giữa vertical
+         * - Mobile: Text center
+         * - Desktop: Text left
          */}
-        <div className="flex flex-col justify-center space-y-2 p-6">
+        <div className="flex flex-col justify-center space-y-2 p-6 text-center lg:text-left">
           {isLoading ? (
             <>
               <Skeleton className="h-9 w-56 rounded-lg" />
@@ -96,13 +100,13 @@ export function WelcomeSection({
             </>
           ) : (
             <>
-              <h1 className="text-3xl font-semibold tracking-tight">
+              <h1 className="text-3xl font-semibold tracking-tight lg:text-4xl!">
                 <span className="font-signature text-muted-foreground">
                   Xin chào,
                 </span>{' '}
                 <span className="text-foreground">{userName}</span>
               </h1>
-              <p className="text-muted-foreground text-lg">{greeting}</p>
+              <p className="text-muted-foreground text-base">{greeting}</p>
             </>
           )}
         </div>

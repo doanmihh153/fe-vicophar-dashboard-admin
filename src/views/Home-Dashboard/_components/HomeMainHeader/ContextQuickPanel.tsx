@@ -51,22 +51,22 @@ const PANEL_ITEMS: PanelItem[] = [
     key: 'draftsCount',
     label: 'Bài nháp',
     Icon: FileEdit,
-    iconClass: 'text-amber-600 dark:text-amber-400',
-    bgClass: 'bg-amber-100 dark:bg-amber-900/30',
+    iconClass: '', // Unused in new design
+    bgClass: 'watermark-card--drafts',
   },
   {
     key: 'todayAppointments',
     label: 'Lịch hôm nay',
     Icon: Calendar,
-    iconClass: 'text-blue-600 dark:text-blue-400',
-    bgClass: 'bg-blue-100 dark:bg-blue-900/30',
+    iconClass: '',
+    bgClass: 'watermark-card--appointments',
   },
   {
     key: 'pendingReviews',
     label: 'Chờ duyệt',
     Icon: Clock,
-    iconClass: 'text-rose-600 dark:text-rose-400',
-    bgClass: 'bg-rose-100 dark:bg-rose-900/30',
+    iconClass: '',
+    bgClass: 'watermark-card--pending',
   },
 ];
 
@@ -87,42 +87,38 @@ export function ContextQuickPanel({
   return (
     <div className="bento-block bento-block--header bento-block--context h-full w-64">
       {/* Title nhỏ */}
-      <h3 className="text-muted-foreground/60 mb-3 text-[10px] font-medium tracking-widest uppercase">
+      <h3 className="mb-3 text-base font-medium tracking-widest uppercase">
         Nhắc nhở
       </h3>
 
       {/* Grid items - vertical stack */}
-      <div className="flex flex-1 flex-col justify-center gap-2">
+      <div className="flex flex-1 flex-col gap-2">
         {PANEL_ITEMS.map((item) => {
           const { Icon } = item;
 
           return (
             <div
               key={item.key}
-              className="bento-item bg-muted/50 flex items-center gap-3 px-3 py-2"
+              className={`watermark-card flex-1 ${item.bgClass}`}
             >
-              {/* Icon với background */}
-              <div
-                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${item.bgClass}`}
-              >
-                <Icon className={`h-3.5 w-3.5 ${item.iconClass}`} />
-              </div>
-
-              {/* Content */}
-              <div className="flex items-center gap-1.5">
-                {isLoading ? (
-                  <Skeleton className="h-4 w-16 rounded-full" />
-                ) : (
-                  <>
-                    <span className="text-sm font-semibold tabular-nums">
+              {/* Content Layer (z-10) */}
+              <div className="relative z-10 flex cursor-pointer items-center justify-between">
+                <div className="flex flex-col">
+                  {isLoading ? (
+                    <Skeleton className="h-6 w-8 bg-white/20" />
+                  ) : (
+                    <span className="text-xl leading-none font-bold">
                       {context?.[item.key] ?? 0}
                     </span>
-                    <span className="text-muted-foreground text-xs">
-                      {item.label}
-                    </span>
-                  </>
-                )}
+                  )}
+                  <span className="font-signature text-sm opacity-90">
+                    {item.label}
+                  </span>
+                </div>
               </div>
+
+              {/* Watermark Icon Layer (z-0) */}
+              <Icon className="watermark-icon" />
             </div>
           );
         })}

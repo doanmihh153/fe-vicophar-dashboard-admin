@@ -19,6 +19,9 @@
 /* ==========================================================================
    DESIGN TOKENS - MÀU SẮC CHO DASHBOARD
    ========================================================================== */
+@theme {
+  --color-button-header: var(--bento-welcome-bg);
+}
 
 :root {
   /*
@@ -44,9 +47,9 @@
    * Bento Colorful Backgrounds - Màu sắc cho header blocks
    * Inspired by reference: Green, Blue, Pink blocks
    */
-  --bento-welcome-bg: oklch(0.55 0.16 145); /* Green - Emerald */
+  --bento-welcome-bg: #05c46b; /* Green - Emerald */
   --bento-welcome-text: oklch(1 0 0); /* White text */
-  --bento-context-bg: oklch(0.65 0.12 240); /* Blue - Sky */
+  --bento-context-bg: #34ace0; /* Blue - Sky */
   --bento-context-text: oklch(1 0 0); /* White text */
 
   /*
@@ -61,14 +64,14 @@
    * Spacing variables đặc biệt cho Dashboard
    */
   --dashboard-section-gap: 32px;
-  --dashboard-card-padding: 24px;
+  --dashboard-card-padding: 12px;
   --dashboard-card-radius: 16px;
 }
 
 /*
  * Dark mode overrides
  */
-[data-theme='dark'] {
+.dark {
   --dashboard-surface-0: oklch(0.18 0.01 250);
   --dashboard-surface-1: oklch(0.22 0.015 250);
   --dashboard-surface-2: oklch(0.25 0.02 250);
@@ -78,8 +81,8 @@
   --dashboard-accent-secondary: oklch(0.75 0.1 85);
 
   /* Bento Colorful - điều chỉnh cho dark mode */
-  --bento-welcome-bg: oklch(0.45 0.14 145); /* Darker green */
-  --bento-context-bg: oklch(0.5 0.1 240); /* Darker blue */
+  --bento-welcome-bg: #218c74; /* Darker green */
+  --bento-context-bg: #227093; /* Darker blue */
 }
 
 /* ==========================================================================
@@ -137,6 +140,9 @@
 .bento-block--welcome {
   background: var(--bento-welcome-bg);
   color: var(--bento-welcome-text);
+  /* Enforce centering from CSS */
+  justify-content: center;
+  align-items: center;
 }
 
 .bento-block--welcome h1,
@@ -198,7 +204,7 @@
 .bento-lottie-square {
   /* Ô vuông: width = height */
   min-width: 160px;
-  max-width: 230;
+  max-width: 260px;
   height: auto;
   aspect-ratio: 2 / 1;
   /* Ko cần aspect-ratio vì đã fix cả 2 chiều */
@@ -320,4 +326,69 @@
 
 .dashboard-animate-in {
   animation: dashboard-fade-in 300ms ease-out;
+}
+
+/* ==========================================================================
+   WATERMARK CARDS (ContextQuickPanel Refactor)
+   ========================================================================== */
+
+.watermark-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: white;
+  transition: all 200ms ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.watermark-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Watermark Icon */
+.watermark-icon {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  width: 64px;
+  height: 64px;
+  opacity: 0.15;
+  transform: rotate(-10deg);
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 300ms ease;
+}
+
+.watermark-card:hover .watermark-icon {
+  transform: rotate(0deg) scale(1.1);
+  opacity: 0.2;
+}
+
+/* Variants */
+.watermark-card--drafts {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.watermark-card--appointments {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.watermark-card--pending {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+}
+
+[data-theme='dark'] .watermark-card--drafts {
+  background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+}
+
+[data-theme='dark'] .watermark-card--appointments {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+}
+
+[data-theme='dark'] .watermark-card--pending {
+  background: linear-gradient(135deg, #be123c 0%, #881337 100%);
 }

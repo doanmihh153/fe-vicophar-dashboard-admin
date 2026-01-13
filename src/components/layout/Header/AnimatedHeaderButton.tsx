@@ -25,7 +25,7 @@ export function AnimatedHeaderButton({
       </span>
 
       {/* Label và Icon khi hover (trạng thái mở) - Slide từ dưới lên */}
-      <div className="bg-sidebar-text-heading absolute top-0 left-0 z-10 flex h-full w-full translate-y-12 items-center justify-center gap-2 rounded-full text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:rounded-none group-hover:opacity-100">
+      <div className="bg-button-header absolute top-0 left-0 z-10 flex h-full w-full translate-y-12 items-center justify-center gap-2 rounded-full text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:rounded-none group-hover:opacity-100">
         <span className="font-display">{label}</span>
         {icon}
       </div>
