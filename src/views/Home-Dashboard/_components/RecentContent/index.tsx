@@ -67,36 +67,47 @@ const SKELETON_COUNT = 5;
 export function RecentContent({
   items,
   isLoading,
-  maxItems = 6, // Tăng lên 6 để lấp đầy grid 3 cột (2 hàng)
+  maxItems = 6,
 }: RecentContentProps) {
   return (
-    <section>
-      {/*
-       * Section Header
-       */}
-      <div className="mb-6 flex items-center justify-between">
+    <section className="group/carousel">
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between">
         <h2 className="text-foreground font-display text-base tracking-widest uppercase">
           Những bài viết gần đây
         </h2>
-        {/* Có thể thêm View All Link ở đây nếu cần */}
+        {/* Navigation Hints (Optional) */}
+        <div className="text-muted-foreground hidden text-xs font-medium opacity-0 transition-opacity group-hover/carousel:opacity-100 md:block">
+          Cuộn ngang để xem thêm &rarr;
+        </div>
       </div>
 
       {/*
-       * GRID LAYOUT
-       * Mobile: 1 cột
-       * Tablet: 2 cột
-       * Desktop: 3 cột
+       * CAROUSEL LAYOUT (Apple Style)
+       * - Flex row + Overflow Auto
+       * - Snap X để bắt dính
+       * - Hide Scrollbar
        */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="flex w-full snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {isLoading
-          ? // Skeleton placeholders (Card shape)
-            Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="aspect-2/1 w-full rounded-2xl" />
+          ? // Skeleton Loop
+            Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="min-w-[85vw] snap-center md:min-w-[300px] lg:min-w-[320px]"
+              >
+                <Skeleton className="aspect-2/1 w-full rounded-2xl" />
+              </div>
             ))
-          : // Actual items
-            items
-              ?.slice(0, maxItems)
-              .map((item) => <RecentCard key={item.id} item={item} />)}
+          : // Actual Items
+            items?.slice(0, maxItems).map((item) => (
+              <div
+                key={item.id}
+                className="min-w-[85vw] snap-center select-none md:min-w-[300px] lg:min-w-[320px]"
+              >
+                <RecentCard item={item} />
+              </div>
+            ))}
       </div>
     </section>
   );
@@ -107,4 +118,4 @@ export function RecentContent({
 // =============================================================================
 
 export default RecentContent;
-export { RecentItem } from './RecentItem';
+export { RecentCard } from './RecentCard';

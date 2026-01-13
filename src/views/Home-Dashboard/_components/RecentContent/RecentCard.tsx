@@ -35,13 +35,11 @@ export function RecentCard({ item }: RecentCardProps) {
   const Badge = (
     <div
       className={cn(
-        'flex items-center rounded-full border border-white/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase shadow-sm backdrop-blur-md',
-        item.status === 'published'
-          ? 'bg-emerald-500/20 text-emerald-100'
-          : 'bg-amber-500/20 text-amber-100'
+        'flex items-center rounded-full px-3 py-1 text-[10px] font-bold tracking-widest text-white/90 uppercase shadow-sm backdrop-blur-md',
+        item.status === 'published' ? 'bg-black/30' : 'bg-amber-500/30'
       )}
     >
-      {item.status === 'published' ? 'Published' : 'Draft'}
+      {item.status === 'published' ? 'Promoted' : 'Draft'}
     </div>
   );
 
@@ -66,11 +64,33 @@ export function RecentCard({ item }: RecentCardProps) {
           image={item.thumbnail}
           aspectRatio="2/1"
           badge={Badge}
+          className="border-none shadow-none" // Force no border/shadow
+          variant="dark"
         >
-          {/* Footer Info */}
-          <div className="flex items-center gap-2 text-white/80">
-            <Clock className="h-3.5 w-3.5" />
-            <span className="text-xs font-medium">{relativeTime}</span>
+          {/* Footer Info & Action Button */}
+          <div className="flex w-full items-end justify-between">
+            <div className="flex items-center gap-2 text-white/80">
+              <Clock className="h-3.5 w-3.5" />
+              <span className="text-xs font-medium">{relativeTime}</span>
+            </div>
+
+            {/* Apple-style Plus Button */}
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-transform duration-300 hover:scale-110 hover:bg-white hover:text-black">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="M12 5v14" />
+              </svg>
+            </div>
           </div>
         </VisualCard>
       </PreviewCardTrigger>
