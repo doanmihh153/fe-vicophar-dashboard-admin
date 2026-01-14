@@ -50,7 +50,7 @@ export function HomeMainHeader({
   isLoading,
 }: HomeMainHeaderProps) {
   return (
-    <section className="bento-row grid-cols-[1fr_auto] items-stretch gap-4">
+    <section className="bento-row grid-cols-[1fr_auto] items-stretch lg:gap-4">
       {/* Block 1: Welcome Section */}
       <WelcomeSection
         userName={userContext?.userName}
