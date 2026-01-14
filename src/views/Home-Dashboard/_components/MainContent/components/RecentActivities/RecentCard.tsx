@@ -25,6 +25,7 @@ import { AppleGridCard } from '@/components/custom/AppleGridCard';
 import { cn } from '@/lib/utils';
 import { Eye, Clock, FileText, ShoppingBag, Newspaper } from 'lucide-react';
 import { formatRelativeTime } from '../../../../_utils';
+import { StatusBadge } from './components/StatusBadge/StatusBadge';
 
 interface RecentCardProps {
   item: RecentContentItem;
@@ -105,24 +106,7 @@ export function RecentCard({ item }: RecentCardProps) {
 
               {/* Status Badge Large */}
               <div className="mt-1">
-                <span
-                  className={cn(
-                    'inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-bold uppercase',
-                    item.status === 'published'
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300'
-                      : 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300'
-                  )}
-                >
-                  <span
-                    className={cn(
-                      'h-1.5 w-1.5 rounded-full',
-                      item.status === 'published'
-                        ? 'bg-emerald-500'
-                        : 'bg-amber-500'
-                    )}
-                  />
-                  {item.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}
-                </span>
+                <StatusBadge status={item.status} />
               </div>
             </div>
           </PreviewCardPopup>
