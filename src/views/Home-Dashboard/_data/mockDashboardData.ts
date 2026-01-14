@@ -142,7 +142,9 @@ export interface DraggableItem {
   id: string;
   /** Tiêu đề công việc */
   title: string;
-  /** Ngày liên quan */
+  /** Mô tả chi tiết công việc (optional) */
+  description?: string;
+  /** Ngày/giờ deadline */
   date: Date;
   /** Mức độ ưu tiên - chỉ dùng để hiển thị dot màu nhỏ */
   priority: 'high' | 'medium' | 'low';

@@ -1,92 +1,99 @@
-/**
- * =============================================================================
- * FILE: TaskItem.tsx
- * =============================================================================
- *
- * MÔ TẢ:
- *   Component hiển thị một công việc đơn lẻ trong DraggableItemList.
- *   Click để mở popup xem chi tiết.
- *
- * INTERACTION:
- *   - Click là primary action
- *   - Drag là secondary (sẽ implement sau nếu cần)
- *   - Hover: bg-muted/50, transition 150ms
- *
- * COLOR LAW (Exception):
- *   - Priority dot là ngoại lệ duy nhất cho rounded-full với màu
- *   - High: rose-500
- *   - Medium: amber-500
- *   - Low: muted-foreground/30
- *
- * =============================================================================
- */
-
-'use client';
-
 import React from 'react';
+import {
+  Calendar,
+  ArrowRight,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { formatShortDate } from '../../_utils';
 import type { DraggableItem } from '../../_data';
 
-// =============================================================================
-// TYPES
-// =============================================================================
-
-interface TaskItemProps {
-  /** Dữ liệu task */
+export function TaskItem({
+  item,
+  onClick,
+}: {
   item: DraggableItem;
-  /** Callback khi click để xem chi tiết */
   onClick?: (item: DraggableItem) => void;
-}
-
-// =============================================================================
-// COMPONENT
-// =============================================================================
-
-/**
- * TaskItem - Item công việc trong Right Bar
- *
- * Layout:
- * ┌─────────────────────────────────────────────────┐
- * │ ● Review bài viết SEO sản phẩm mới              │
- * └─────────────────────────────────────────────────┘
- *
- * ● = Priority dot (rose/amber/muted theo priority)
- */
-export function TaskItem({ item, onClick }: TaskItemProps) {
-  /**
-   * Xác định class cho priority dot
-   * Đây là exception theo Design Constitution:
-   * "Priority indicator là exception, chỉ dùng cho right bar"
-   */
-  const getPriorityDotClass = () => {
+}) {
+  // --- Theme Logic ---
+  const getTheme = () => {
     switch (item.priority) {
       case 'high':
-        return 'bg-rose-500';
+        return {
+          bg: 'bg-red-400 dark:bg-red-700',
+          icon: AlertCircle,
+        };
       case 'medium':
-        return 'bg-amber-500';
+        return {
+          bg: 'bg-blue-400 dark:bg-blue-700',
+          icon: Clock,
+        };
       case 'low':
       default:
-        return 'bg-muted-foreground/30';
+        return {
+          bg: 'bg-green-400 dark:bg-green-700',
+          icon: CheckCircle2,
+        };
     }
   };
+
+  const theme = getTheme();
+  const Icon = theme.icon;
 
   return (
     <button
       onClick={() => onClick?.(item)}
-      className="hover:bg-muted/50 flex w-full items-center gap-3 p-3 text-left transition-colors duration-150"
+      className={cn(
+        'group relative flex w-full flex-col justify-between overflow-hidden rounded-2xl p-4 text-left transition-all duration-300',
+        'min-h-[140px]', // Fixed Minimum Height
+        // 'hover:scale-[1.02] hover:shadow-lg',
+        theme.bg
+      )}
     >
-      {/* Priority indicator dot */}
-      <span
-        className={`h-2 w-2 shrink-0 rounded-full ${getPriorityDotClass()}`}
-      />
+      {/*
+       * 1. DECORATIVE BACKGROUND
+       * Icon to, mờ nhạt nằm background bên phải
+       */}
+      <div className="absolute -right-4 -bottom-4 rotate-[-15deg] opacity-20 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-0">
+        <Icon className="h-24 w-24 text-white" />
+      </div>
 
-      {/* Task title - truncate nếu dài */}
-      <span className="min-w-0 flex-1 truncate text-sm">{item.title}</span>
+      {/*
+       * 2. CONTENT
+       */}
+      <div className="relative z-10 flex h-full flex-col justify-between gap-3 text-white">
+        {/* Top: Priority Badge (Coupon Code Style) */}
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-1 backdrop-blur-md">
+            <span className="text-xs font-bold tracking-wider uppercase">
+              {item.priority} Priority
+            </span>
+          </div>
+          {/* Action Icon */}
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+            <ArrowRight className="h-4 w-4" />
+          </div>
+        </div>
+
+        {/* Middle: Title */}
+        <div>
+          <h4 className="font-display line-clamp-2 text-base">{item.title}</h4>
+        </div>
+
+        {/* Bottom: Date */}
+        <div className="mt-1 flex items-center gap-2 opacity-90">
+          <Calendar className="h-3 w-3" />
+          <span className="text-sm font-medium">
+            Deadline:{' '}
+            <span className="font-bold">{formatShortDate(item.date)}</span>
+          </span>
+        </div>
+      </div>
+
+      {/* SHINE EFFECT on Hover */}
+      <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
     </button>
   );
 }
-
-// =============================================================================
-// EXPORT
-// =============================================================================
-
-export default TaskItem;
