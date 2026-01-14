@@ -7,8 +7,8 @@ import {
   Clock,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatShortDate } from '../../_utils';
-import type { DraggableItem } from '../../_data';
+import { formatShortDate } from '../../../../_utils';
+import type { DraggableItem } from '../../../../_data';
 
 export function TaskItem({
   item,

@@ -1,18 +1,17 @@
 /**
  * =============================================================================
- * FILE: ItemDetailPopup.tsx
+ * FILE: TaskPopup.tsx
  * =============================================================================
  *
  * MÔ TẢ:
  *   Popup hiển thị chi tiết công việc với 2 chế độ:
- *   - View Mode: Xem thông tin đầy đủ (tiêu đề, mô tả, deadline ngày+giờ, priority)
- *   - Edit Mode: Form chỉnh sửa dạng mini (input, dropdown priority, date/time picker)
+ *   - View Mode: Xem thông tin đầy đủ
+ *   - Edit Mode: Form chỉnh sửa
  *
  * PROPS:
- *   - item: DraggableItem | null - Item cần hiển thị/chỉnh sửa (null = create new)
- *   - onClose: () => void - Callback đóng popup
- *   - onSave: (item: DraggableItem) => void - Callback lưu thay đổi
- *   - defaultMode?: 'view' | 'edit' - Chế độ mặc định khi mở popup
+ *   - item: DraggableItem | null - Item cần hiển thị/chỉnh sửa
+ *   - onClose: () => void - Callback đóng
+ *   - onSave: (item: DraggableItem) => void - Callback lưu
  *
  * =============================================================================
  */
@@ -21,13 +20,13 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { X, Pencil, Calendar, Clock, Tag } from 'lucide-react';
-import type { DraggableItem } from '../../_data';
+import type { DraggableItem } from '../../../../_data';
 
 // =============================================================================
 // TYPES
 // =============================================================================
 
-interface ItemDetailPopupProps {
+interface TaskPopupProps {
   /** Item cần hiển thị chi tiết (null = tạo mới) */
   item: DraggableItem | null;
   /** Callback khi đóng popup */
@@ -38,7 +37,6 @@ interface ItemDetailPopupProps {
   defaultMode?: 'view' | 'edit';
 }
 
-// Form state type
 interface FormState {
   title: string;
   description: string;
@@ -51,15 +49,11 @@ interface FormState {
 // HELPER FUNCTIONS
 // =============================================================================
 
-/**
- * Lấy label và màu cho priority
- */
 const getPriorityInfo = (priority: 'high' | 'medium' | 'low') => {
   switch (priority) {
     case 'high':
       return {
         label: 'Cao',
-        emoji: '🔴',
         dotClass: 'bg-rose-500',
         textClass: 'text-rose-600 dark:text-rose-400',
         bgClass: 'bg-rose-50 dark:bg-rose-950/30',
@@ -67,7 +61,6 @@ const getPriorityInfo = (priority: 'high' | 'medium' | 'low') => {
     case 'medium':
       return {
         label: 'Trung bình',
-        emoji: '🔵',
         dotClass: 'bg-blue-500',
         textClass: 'text-blue-600 dark:text-blue-400',
         bgClass: 'bg-blue-50 dark:bg-blue-950/30',
@@ -76,7 +69,6 @@ const getPriorityInfo = (priority: 'high' | 'medium' | 'low') => {
     default:
       return {
         label: 'Thấp',
-        emoji: '🟢',
         dotClass: 'bg-green-500',
         textClass: 'text-green-600 dark:text-green-400',
         bgClass: 'bg-green-50 dark:bg-green-950/30',
@@ -84,10 +76,6 @@ const getPriorityInfo = (priority: 'high' | 'medium' | 'low') => {
   }
 };
 
-/**
- * Format date to YYYY-MM-DD for input[type="date"]
- * IMPORTANT: Dùng local date methods, KHÔNG dùng toISOString() vì nó chuyển sang UTC
- */
 const formatDateForInput = (date: Date): string => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -95,16 +83,10 @@ const formatDateForInput = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-/**
- * Format time to HH:mm for input[type="time"]
- */
 const formatTimeForInput = (date: Date): string => {
   return date.toTimeString().slice(0, 5);
 };
 
-/**
- * Format date for display (Vietnamese format)
- */
 const formatDateTimeDisplay = (date: Date): string => {
   const day = date.getDate().toString().padStart(2, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -118,19 +100,16 @@ const formatDateTimeDisplay = (date: Date): string => {
 // COMPONENT
 // =============================================================================
 
-export function ItemDetailPopup({
+export function TaskPopup({
   item,
   onClose,
   onSave,
   defaultMode = 'view',
-}: ItemDetailPopupProps) {
-  // ============== STATE ==============
-  // Nếu không có item (tạo mới) thì luôn ở Edit mode
+}: TaskPopupProps) {
   const [mode, setMode] = useState<'view' | 'edit'>(
     item ? defaultMode : 'edit'
   );
 
-  // Form state
   const [form, setForm] = useState<FormState>(() => {
     const now = new Date();
     return {
@@ -146,16 +125,9 @@ export function ItemDetailPopup({
     };
   });
 
-  // ============== EFFECTS ==============
-
-  /**
-   * Sync form state khi mở popup cho TASK KHÁC (dựa vào item.id)
-   * IMPORTANT: Chỉ sync khi item.id thay đổi, KHÔNG phải khi item object reference thay đổi
-   * Điều này tránh reset form khi user đang edit mà parent re-render
-   */
+  // Sync state when item changes
   useEffect(() => {
     const now = new Date();
-
     setForm({
       title: item?.title || '',
       description: item?.description || '',
@@ -167,71 +139,27 @@ export function ItemDetailPopup({
         : formatTimeForInput(now),
       priority: item?.priority || 'medium',
     });
-    // Reset mode khi mở popup cho task khác
-
     setMode(item ? defaultMode : 'edit');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item?.id, defaultMode]); // Chỉ sync khi item.id thay đổi
+  }, [item?.id, defaultMode]);
 
-  /**
-   * Handle ESC key để đóng popup
-   */
+  // Handle Escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
+      if (e.key === 'Escape') onClose();
     };
-
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [onClose]);
 
-  // ============== HANDLERS ==============
-
-  /**
-   * Chuyển sang Edit mode
-   */
-  const handleEditClick = useCallback(() => {
-    setMode('edit');
-  }, []);
-
-  /**
-   * Hủy chỉnh sửa, quay về View mode (hoặc đóng nếu tạo mới)
-   */
-  const handleCancel = useCallback(() => {
-    if (!item) {
-      // Tạo mới -> đóng popup
-      onClose();
-    } else {
-      // Reset form về giá trị ban đầu
-      setForm({
-        title: item.title,
-        description: item.description || '',
-        date: formatDateForInput(new Date(item.date)),
-        time: formatTimeForInput(new Date(item.date)),
-        priority: item.priority,
-      });
-      setMode('view');
-    }
-  }, [item, onClose]);
-
-  /**
-   * Lưu thay đổi
-   */
   const handleSave = useCallback(() => {
-    if (!form.title.trim()) {
-      // Validate: title bắt buộc
-      return;
-    }
+    if (!form.title.trim()) return;
 
-    // Tạo Date từ form
     const [year, month, day] = form.date.split('-').map(Number);
     const [hours, minutes] = form.time.split(':').map(Number);
     const newDate = new Date(year, month - 1, day, hours, minutes);
 
     const updatedItem: DraggableItem = {
-      id: item?.id || `task-${Date.now()}`, // Tạo ID mới nếu là create
+      id: item?.id || `task-${Date.now()}`,
       title: form.title.trim(),
       description: form.description.trim() || undefined,
       date: newDate,
@@ -242,9 +170,6 @@ export function ItemDetailPopup({
     onClose();
   }, [form, item, onSave, onClose]);
 
-  /**
-   * Update form field
-   */
   const updateField = <K extends keyof FormState>(
     field: K,
     value: FormState[K]
@@ -252,30 +177,21 @@ export function ItemDetailPopup({
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  // ============== RENDER ==============
-
-  // Sử dụng form.priority thay vì item.priority để hiển thị đúng màu khi đã edit
   const priority = getPriorityInfo(form.priority);
   const isCreateMode = !item;
 
   return (
     <>
-      {/*
-       * Backdrop overlay
-       * Click để đóng popup
-       */}
+      {/* Backdrop */}
       <div
         className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-150"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/*
-       * Popup content
-       * Centered modal với rounded corners
-       */}
+      {/* Content */}
       <div className="bg-background border-border fixed top-1/2 left-1/2 z-50 w-[340px] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl border p-5">
-        {/* ============== HEADER ============== */}
+        {/* Header */}
         <div className="mb-5 flex items-center justify-between">
           <h3 className="text-foreground text-base font-semibold">
             {mode === 'view'
@@ -285,31 +201,26 @@ export function ItemDetailPopup({
                 : 'Chỉnh sửa công việc'}
           </h3>
           <div className="flex items-center gap-2">
-            {/* Nút chỉnh sửa (chỉ hiện trong View mode) */}
             {mode === 'view' && (
               <button
-                onClick={handleEditClick}
+                onClick={() => setMode('edit')}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg p-1.5 transition-colors"
-                aria-label="Chỉnh sửa"
               >
                 <Pencil className="h-4 w-4" />
               </button>
             )}
-            {/* Nút đóng */}
             <button
               onClick={onClose}
               className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg p-1.5 transition-colors"
-              aria-label="Đóng"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        {/* ============== VIEW MODE ============== */}
+        {/* View Mode */}
         {mode === 'view' && item && (
           <div className="space-y-4">
-            {/* Tiêu đề */}
             <div>
               <span className="text-muted-foreground mb-1 flex items-center gap-1.5 text-xs">
                 📋 Tiêu đề
@@ -317,7 +228,6 @@ export function ItemDetailPopup({
               <p className="text-foreground font-medium">{item.title}</p>
             </div>
 
-            {/* Mô tả (nếu có) */}
             {item.description && (
               <div>
                 <span className="text-muted-foreground mb-1 flex items-center gap-1.5 text-xs">
@@ -329,7 +239,6 @@ export function ItemDetailPopup({
               </div>
             )}
 
-            {/* Deadline */}
             <div>
               <span className="text-muted-foreground mb-1 flex items-center gap-1.5 text-xs">
                 <Clock className="h-3 w-3" /> Deadline
@@ -356,7 +265,6 @@ export function ItemDetailPopup({
               </div>
             </div>
 
-            {/* Footer: Nút Đóng + Chỉnh sửa */}
             <div className="mt-6 flex gap-3">
               <button
                 onClick={onClose}
@@ -365,7 +273,7 @@ export function ItemDetailPopup({
                 Đóng
               </button>
               <button
-                onClick={handleEditClick}
+                onClick={() => setMode('edit')}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground flex-1 rounded-xl py-2.5 text-sm font-medium transition-colors"
               >
                 Chỉnh sửa
@@ -374,24 +282,21 @@ export function ItemDetailPopup({
           </div>
         )}
 
-        {/* ============== EDIT MODE ============== */}
+        {/* Edit Mode */}
         {mode === 'edit' && (
           <div className="space-y-4">
-            {/* Input: Tiêu đề */}
             <div>
               <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
-                Tiêu đề <span className="text-rose-500">*</span>
+                Tiêu đề *
               </label>
               <input
                 type="text"
                 value={form.title}
                 onChange={(e) => updateField('title', e.target.value)}
-                placeholder="Nhập tiêu đề công việc..."
                 className="border-border bg-muted/30 focus:ring-primary/20 w-full rounded-xl border px-3 py-2.5 text-sm transition-all outline-none focus:border-transparent focus:ring-2"
               />
             </div>
 
-            {/* Textarea: Mô tả */}
             <div>
               <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
                 Mô tả
@@ -399,18 +304,15 @@ export function ItemDetailPopup({
               <textarea
                 value={form.description}
                 onChange={(e) => updateField('description', e.target.value)}
-                placeholder="Mô tả chi tiết công việc (tuỳ chọn)..."
-                rows={2}
                 className="border-border bg-muted/30 focus:ring-primary/20 w-full resize-none rounded-xl border px-3 py-2.5 text-sm transition-all outline-none focus:border-transparent focus:ring-2"
+                rows={2}
               />
             </div>
 
-            {/* Date + Time pickers */}
             <div className="grid grid-cols-2 gap-3">
-              {/* Ngày deadline */}
               <div>
-                <label className="text-muted-foreground mb-1.5 flex items-center gap-1 text-xs font-medium">
-                  <Calendar className="h-3 w-3" /> Ngày
+                <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+                  Ngày
                 </label>
                 <input
                   type="date"
@@ -419,11 +321,9 @@ export function ItemDetailPopup({
                   className="border-border bg-muted/30 focus:ring-primary/20 w-full rounded-xl border px-3 py-2.5 text-sm transition-all outline-none focus:border-transparent focus:ring-2"
                 />
               </div>
-
-              {/* Giờ deadline */}
               <div>
-                <label className="text-muted-foreground mb-1.5 flex items-center gap-1 text-xs font-medium">
-                  <Clock className="h-3 w-3" /> Giờ
+                <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+                  Giờ
                 </label>
                 <input
                   type="time"
@@ -434,31 +334,24 @@ export function ItemDetailPopup({
               </div>
             </div>
 
-            {/* Dropdown: Priority */}
             <div>
-              <label className="text-muted-foreground mb-1.5 flex items-center gap-1 text-xs font-medium">
-                <Tag className="h-3 w-3" /> Mức độ ưu tiên
+              <label className="text-muted-foreground mb-1.5 block text-xs font-medium">
+                Prioriy
               </label>
               <select
                 value={form.priority}
-                onChange={(e) =>
-                  updateField(
-                    'priority',
-                    e.target.value as 'high' | 'medium' | 'low'
-                  )
-                }
-                className="border-border bg-muted/30 focus:ring-primary/20 w-full appearance-none rounded-xl border px-3 py-2.5 text-sm transition-all outline-none focus:border-transparent focus:ring-2"
+                onChange={(e) => updateField('priority', e.target.value as any)}
+                className="border-border bg-muted/30 focus:ring-primary/20 w-full rounded-xl border px-3 py-2.5 text-sm transition-all outline-none focus:border-transparent focus:ring-2"
               >
-                <option value="high">🔴 Cao</option>
-                <option value="medium">🔵 Trung bình</option>
-                <option value="low">🟢 Thấp</option>
+                <option value="high">Cao</option>
+                <option value="medium">Trung bình</option>
+                <option value="low">Thấp</option>
               </select>
             </div>
 
-            {/* Footer: Nút Hủy + Lưu */}
             <div className="mt-6 flex gap-3">
               <button
-                onClick={handleCancel}
+                onClick={() => (isCreateMode ? onClose() : setMode('view'))}
                 className="bg-muted hover:bg-muted/80 text-foreground flex-1 rounded-xl py-2.5 text-sm font-medium transition-colors"
               >
                 Hủy
@@ -468,7 +361,7 @@ export function ItemDetailPopup({
                 disabled={!form.title.trim()}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground flex-1 rounded-xl py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
               >
-                {isCreateMode ? 'Thêm' : 'Lưu'}
+                Lưu
               </button>
             </div>
           </div>
@@ -477,9 +370,3 @@ export function ItemDetailPopup({
     </>
   );
 }
-
-// =============================================================================
-// EXPORT
-// =============================================================================
-
-export default ItemDetailPopup;

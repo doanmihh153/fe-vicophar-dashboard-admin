@@ -12,6 +12,7 @@
  *   - StatOverview: Grid 4 cột thống kê
  *   - RecentContent: Danh sách nội dung gần đây
  *   - AnalyticsOverview: Thống kê analytics đơn giản
+ *   - RightBar: Sidebar phải (Task + Calendar)
  *
  * =============================================================================
  */
@@ -27,13 +28,11 @@ export { ContextQuickPanel } from './HomeMainHeader';
 // STAT OVERVIEW
 // =============================================================================
 export { StatOverview } from './StatOverview';
-export { StatCard } from './StatOverview';
 
 // =============================================================================
 // RECENT CONTENT
 // =============================================================================
 export { RecentContent } from './RecentContent';
-export { RecentItem } from './RecentContent';
 
 // =============================================================================
 // ANALYTICS OVERVIEW
@@ -41,10 +40,9 @@ export { RecentItem } from './RecentContent';
 export { AnalyticsOverview } from './AnalyticsOverview';
 
 // =============================================================================
-// RIGHT BAR CONTENT
+// RIGHT BAR CONTENT (NEW STRUCTURE)
 // =============================================================================
-export { RightBarContent } from './RightBarContent';
-export { DraggableItemList } from './RightBarContent';
-export { TaskItem } from './RightBarContent';
-export { ItemDetailPopup } from './RightBarContent';
-export { CalendarPanel } from './RightBarContent';
+export { RightBar as RightBarContent } from './RightBar';
+
+// Backup old exports if needed, but we are replacing them:
+// export { DraggableItemList } from './RightBarContent'; // REMOVED to enforce encapsulation

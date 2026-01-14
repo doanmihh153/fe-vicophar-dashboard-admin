@@ -7,23 +7,13 @@
  *   Component hiển thị mini calendar trong Right Bar.
  *   Hiển thị lịch theo tháng với khả năng chọn ngày.
  *
- * NGUYÊN TẮC (theo Design Constitution):
- *   - Calendar chỉ để xem, không phải Google Calendar
- *   - Selected date là EXCEPTION duy nhất cho bg-foreground
- *   - Hover: bg-muted/50, transition 150ms
- *   - Không border cho cells
- *
- * LAYOUT:
- *   - Grid 7 cột cho 7 ngày trong tuần
- *   - Row header: Mon Tue Wed...
- *   - Date cells: số ngày
- *
  * =============================================================================
  */
 
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // =============================================================================
 // CONSTANTS
@@ -131,23 +121,6 @@ function isSameDay(date1: Date, date2: Date): boolean {
 // =============================================================================
 // COMPONENT
 // =============================================================================
-
-/**
- * CalendarPanel - Mini calendar trong Right Bar
- *
- * Layout:
- * ┌─────────────────────────────────────────────────┐
- * │ T2  T3  T4  T5  T6  T7  CN                      │
- * │ 30  31   1   2   3   4   5                      │
- * │  6   7   8   9  10  11  12                      │
- * │ 13  14  15  16  17  18  19  ← 13 selected       │
- * │ ...                                              │
- * └─────────────────────────────────────────────────┘
- */
-// ... (imports remain same)
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-// ... (helpers remain same)
 
 export function CalendarPanel() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -259,9 +232,3 @@ export function CalendarPanel() {
     </div>
   );
 }
-
-// =============================================================================
-// EXPORT
-// =============================================================================
-
-export default CalendarPanel;
