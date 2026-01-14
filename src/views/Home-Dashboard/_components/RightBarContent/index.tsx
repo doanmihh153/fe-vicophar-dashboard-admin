@@ -199,10 +199,12 @@ export function RightBarContent({
        * ====================================
        * Cố định ở cuối, spacing 32px (mt-8) tách khỏi task list
        */}
-      <div className="mt-8 pt-6">
-        <h3 className="text-muted-foreground/50 mb-4 text-[10px] font-medium tracking-widest uppercase">
-          Lịch
-        </h3>
+      {/*
+       * ====================================
+       * Lịch (Calendar) - SECONDARY
+       * ====================================
+       */}
+      <div className="mt-4">
         <CalendarPanel />
       </div>
 

@@ -144,13 +144,15 @@ function isSameDay(date1: Date, date2: Date): boolean {
  * │ ...                                              │
  * └─────────────────────────────────────────────────┘
  */
+// ... (imports remain same)
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+// ... (helpers remain same)
+
 export function CalendarPanel() {
-  // State cho ngày/tháng hiện tại đang hiển thị
   const [currentDate, setCurrentDate] = useState(new Date());
-  // State cho ngày được chọn
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Tính toán các ngày trong calendar
   const calendarDays = useMemo(
     () =>
       generateCalendarDays(
@@ -161,78 +163,98 @@ export function CalendarPanel() {
     [currentDate, selectedDate]
   );
 
-  /**
-   * Chuyển đến tháng trước
-   */
   const goToPreviousMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
     );
   };
 
-  /**
-   * Chuyển đến tháng sau
-   */
   const goToNextMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
     );
   };
 
-  /**
-   * Format tháng/năm hiển thị
-   */
-  const monthYearLabel = currentDate.toLocaleDateString('vi-VN', {
-    month: 'long',
-    year: 'numeric',
-  });
+  // Format: "Tháng 8, 2021"
+  const monthLabel = currentDate.toLocaleDateString('vi-VN', { month: 'long' });
+  const yearLabel = currentDate.getFullYear();
 
   return (
-    <div className="text-sm">
-      {/* Header: Navigation tháng */}
-      <div className="mb-4 flex items-center justify-between">
-        <button
-          onClick={goToPreviousMonth}
-          className="hover:bg-muted/50 p-1 transition-colors duration-150"
-          aria-label="Tháng trước"
-        >
-          ←
-        </button>
-        <span className="text-muted-foreground text-xs capitalize">
-          {monthYearLabel}
-        </span>
-        <button
-          onClick={goToNextMonth}
-          className="hover:bg-muted/50 p-1 transition-colors duration-150"
-          aria-label="Tháng sau"
-        >
-          →
-        </button>
+    <div className="dashboard-section bg-sidebar p-5">
+      {/* Header */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-baseline gap-1">
+          <h3 className="text-foreground text-base font-bold capitalize">
+            {monthLabel},
+          </h3>
+          <span className="text-muted-foreground text-base font-normal">
+            {yearLabel}
+          </span>
+        </div>
+
+        <div className="flex gap-1">
+          <button
+            onClick={goToPreviousMonth}
+            className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-orange-100 hover:text-orange-600 dark:hover:bg-orange-900/30 dark:hover:text-orange-400"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            onClick={goToNextMonth}
+            className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-orange-100 hover:text-orange-600 dark:hover:bg-orange-900/30 dark:hover:text-orange-400"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-1 text-center">
-        {/* Weekday headers */}
+      {/* Grid */}
+      <div className="grid grid-cols-7 gap-y-3 text-center">
+        {/* Weekdays */}
         {WEEKDAYS.map((day) => (
-          <span key={day} className="text-muted-foreground py-2 text-xs">
+          <span
+            key={day}
+            className="text-[10px] font-bold tracking-wider text-orange-400 uppercase"
+          >
             {day}
           </span>
         ))}
 
-        {/* Date cells */}
-        {calendarDays.map((day, i) => (
-          <button
-            key={i}
-            onClick={() => setSelectedDate(day.date)}
-            className={`aspect-square p-1 text-xs transition-colors duration-150 ${!day.isCurrentMonth ? 'text-muted-foreground/50' : ''} ${day.isToday && !day.isSelected ? 'font-medium' : ''} ${
-              day.isSelected
-                ? 'bg-foreground text-background' // EXCEPTION: selected date
-                : 'hover:bg-muted/50'
-            } `}
-          >
-            {day.dayNumber}
-          </button>
-        ))}
+        {/* Cells */}
+        {calendarDays.map((day, i) => {
+          // Logic style:
+          // 1. Selected: Solid orange bg, white text
+          // 2. Today (Not Selected): Orange text bold
+          // 3. Other: Normal text
+          // 4. Not current month: Muted
+
+          let cellClass =
+            'mx-auto flex h-8 w-8 items-center justify-center rounded-full text-xs transition-all duration-200 ';
+
+          if (day.isSelected) {
+            cellClass +=
+              'bg-orange-400 text-white shadow-md shadow-orange-200 dark:shadow-none font-semibold';
+          } else if (day.isToday) {
+            cellClass +=
+              'text-orange-500 font-bold bg-orange-50 dark:bg-orange-950/30 ring-1 ring-orange-200 dark:ring-orange-800';
+          } else {
+            cellClass +=
+              'text-foreground hover:bg-orange-50 dark:hover:bg-orange-900/20';
+            if (!day.isCurrentMonth) {
+              cellClass += ' text-muted-foreground/30';
+            }
+          }
+
+          return (
+            <button
+              key={i}
+              onClick={() => setSelectedDate(day.date)}
+              className={cellClass}
+            >
+              {day.dayNumber}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
