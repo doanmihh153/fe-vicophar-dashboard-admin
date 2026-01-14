@@ -114,6 +114,11 @@ export interface GAPerformanceData {
     labels: string[]; // Mon, Tue...
     values: number[]; // Pageviews
   };
+  /** Nguồn traffic (Organic, Direct, Social, etc.) */
+  trafficSource: {
+    label: string;
+    value: number; // Percent 0-100
+  }[];
 }
 
 /**
@@ -302,6 +307,12 @@ const mockGAPerformance: GAPerformanceData = {
     labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
     values: [1200, 1500, 1800, 1400, 2000, 2500, 3000],
   },
+  trafficSource: [
+    { label: 'Organic Search', value: 45 },
+    { label: 'Direct', value: 30 },
+    { label: 'Social', value: 15 },
+    { label: 'Referral', value: 10 },
+  ],
 };
 
 const mockContentPerformance: ContentPerformanceItem[] = [

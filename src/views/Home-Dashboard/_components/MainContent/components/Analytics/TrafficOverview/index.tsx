@@ -5,18 +5,9 @@
  *
  * MÔ TẢ:
  *   Section hiển thị Level 1: Tổng quan sức khỏe hệ thống ("Vital Signs").
- *   Layout: Vertical Stack [Metrics Grid] + [Trend Chart].
- *
- * LAYOUT:
- *   ┌──────────────────────────────────────────────┐
- *   │  Users    Sessions    Avg Time    Views      │
- *   │  1.2k     3.4k        2m 25s      12.4k      │
- *   │  ↑ 12%    ↑ 5%        --          ↓ 2%       │
- *   ├──────────────────────────────────────────────┤
- *   │                                              │
- *   │           [ Minimalist Line Chart ]          │
- *   │                                              │
- *   └──────────────────────────────────────────────┘
+ *   Layout:
+ *    [ Metrics Grid ] (4 cols)
+ *    [ Charts Row   ] -> [ Trend Line Chart (2/3) ] + [ Traffic Source (1/3) ]
  *
  * =============================================================================
  */
@@ -26,8 +17,8 @@
 import React from 'react';
 import { TrafficLineChart } from './TrafficLineChart';
 import { MetricItem } from './components/MetricItem/MetricItem';
+import { TrafficSource } from './components/TrafficSource/TrafficSource';
 import type { GAPerformanceData } from '../../../../../_data';
-import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 import { formatNumber } from '../../../../../_utils';
@@ -42,16 +33,11 @@ interface TrafficOverviewProps {
 }
 
 // =============================================================================
-// SUB-COMPONENTS
-// =============================================================================
-// Imported from ./components/MetricItem/MetricItem
-
-// =============================================================================
 // MAIN COMPONENT
 // =============================================================================
 
 export function TrafficOverview({ data, isLoading }: TrafficOverviewProps) {
-  const { overview, trafficTrend } = data || {};
+  const { overview, trafficTrend, trafficSource } = data || {};
 
   return (
     <div className="flex flex-col gap-8">
@@ -87,29 +73,41 @@ export function TrafficOverview({ data, isLoading }: TrafficOverviewProps) {
         />
       </div>
 
-      {/* 2. Traffic Trend Chart */}
-      <div className="border-border/40 border-t pt-4">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-foreground text-sm font-medium">
-            Traffic Trend (7 days)
-          </h3>
-          {/* Simple Legend */}
-          <div className="text-muted-foreground flex items-center gap-2 text-xs">
-            <div className="h-2 w-2 rounded-full bg-[#0fb9b1]"></div>
-            <span>Page Views</span>
+      {/* 2. Analytics Row (Trend + Source) */}
+      <div className="border-border/40 border-t pt-8">
+        <div className="grid gap-8 lg:grid-cols-3">
+          {/* LEFT: Traffic Trend Chart (2/3) */}
+          <div className="lg:col-span-2">
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
+                Xu hướng truy cập (7 ngày)
+              </h3>
+              {/* Legend */}
+              <div className="flex items-center gap-2 text-xs font-medium text-gray-500">
+                <div className="h-2 w-2 rounded-full bg-[#0fb9b1]"></div>
+                <span>Page Views</span>
+              </div>
+            </div>
+
+            {isLoading ? (
+              <Skeleton className="h-[220px] w-full rounded-xl" />
+            ) : (
+              <div className="h-[220px] w-full">
+                <TrafficLineChart
+                  data={trafficTrend?.values ?? []}
+                  labels={trafficTrend?.labels ?? []}
+                  height={220}
+                  color="#0fb9b1"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT: Traffic Source (1/3) */}
+          <div className="border-border/40 pt-8 lg:border-l lg:pt-0 lg:pl-8">
+            <TrafficSource data={trafficSource} isLoading={isLoading} />
           </div>
         </div>
-
-        {isLoading ? (
-          <Skeleton className="h-[200px] w-full rounded-xl" />
-        ) : (
-          <TrafficLineChart
-            data={trafficTrend?.values ?? []}
-            labels={trafficTrend?.labels ?? []}
-            height={220}
-            color="#0fb9b1" // Primary Chart Color
-          />
-        )}
       </div>
     </div>
   );
