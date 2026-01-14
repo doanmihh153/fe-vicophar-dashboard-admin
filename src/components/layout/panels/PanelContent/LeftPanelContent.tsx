@@ -110,7 +110,7 @@ export function LeftPanelContent({
        * overflow-x-hidden: Chặn horizontal scroll (quan trọng cho collapse)
        * overflow-y-auto: Enable vertical scroll
        */}
-      <div className="flex-1 overflow-x-hidden overflow-y-auto px-2 py-2">
+      <div className="flex-1 overflow-x-hidden overflow-y-auto pl-2">
         {NAV_SECTIONS.map((section) => (
           <NavSection
             key={section.title}

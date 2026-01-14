@@ -1,0 +1,373 @@
+/**
+ * =============================================================================
+ * FILE: home-dashboard.css
+ * =============================================================================
+ *
+ * MÔ TẢ:
+ *   CSS riêng cho Home Dashboard.
+ *   Chứa CSS variables cho màu sắc và spacing - KHÔNG hardcode.
+ *   Dễ dàng customize bởi user.
+ *
+ * NGUYÊN TẮC:
+ *   - Tất cả màu sắc đều là CSS variables
+ *   - Sử dụng OKLCH để tương thích với theme hiện tại
+ *   - Có thể override bằng data-theme
+ *
+ * =============================================================================
+ */
+
+/* ==========================================================================
+   DESIGN TOKENS - MÀU SẮC CHO DASHBOARD
+   ========================================================================== */
+@theme {
+  --color-button-header: var(--bento-welcome-bg);
+
+  /* Star Card */
+  --color-star-card-one: var(--star-card-one);
+}
+
+:root {
+  /*
+   * Surface colors - Background cho các sections
+   * Dựa trên --background, điều chỉnh lightness
+   */
+  --dashboard-surface-0: oklch(0.98 0.005 250); /* Base - rất nhạt */
+  --dashboard-surface-1: oklch(1 0 0); /* Card background - trắng */
+  --dashboard-surface-2: oklch(0.96 0.01 250); /* Elevated - subtle tint */
+
+  /*
+   * Accent colors - Màu nhấn cho icons và highlights
+   * Inspired by reference images (Donezo green + warm accent)
+   */
+  --dashboard-accent-primary: oklch(0.55 0.15 160); /* Teal/Green chính */
+  --dashboard-accent-secondary: oklch(0.7 0.12 85); /* Yellow/Gold ấm */
+  --dashboard-accent-tertiary: oklch(0.6 0.14 250); /* Blue cho neutral */
+  --dashboard-accent-success: oklch(0.65 0.16 145); /* Emerald success */
+  --dashboard-accent-warning: oklch(0.7 0.14 60); /* Amber warning */
+  --dashboard-accent-danger: oklch(0.6 0.16 25); /* Rose danger */
+
+  /*
+   * Bento Colorful Backgrounds - Màu sắc cho header blocks
+   * Inspired by reference: Green, Blue, Pink blocks
+   */
+  --bento-welcome-bg: #05c46b; /* Green - Emerald */
+  --bento-welcome-text: oklch(1 0 0); /* White text */
+  --bento-context-bg: #34ace0; /* Blue - Sky */
+  --bento-context-text: oklch(1 0 0); /* White text */
+
+  /*
+   * Icon colors - Màu cho các icon 3D/colorful
+   */
+  --dashboard-icon-news: oklch(0.55 0.18 160); /* Teal cho Tin tức */
+  --dashboard-icon-articles: oklch(0.6 0.16 250); /* Blue cho Bài viết */
+  --dashboard-icon-products: oklch(0.65 0.14 145); /* Green cho Sản phẩm */
+  --dashboard-icon-drafts: oklch(0.7 0.12 60); /* Amber cho Bản nháp */
+
+  /*
+   * Spacing variables đặc biệt cho Dashboard
+   */
+  --dashboard-section-gap: 32px;
+  --dashboard-card-padding: 12px;
+  --dashboard-card-radius: 16px;
+
+  --star-card-one: #f7b731;
+}
+
+/*
+ * Dark mode overrides
+ */
+.dark {
+  --dashboard-surface-0: oklch(0.18 0.01 250);
+  --dashboard-surface-1: oklch(0.22 0.015 250);
+  --dashboard-surface-2: oklch(0.25 0.02 250);
+
+  /* Accent colors - tăng lightness cho dark mode */
+  --dashboard-accent-primary: oklch(0.65 0.14 160);
+  --dashboard-accent-secondary: oklch(0.75 0.1 85);
+
+  /* Bento Colorful - điều chỉnh cho dark mode */
+  --bento-welcome-bg: #218c74; /* Darker green */
+  --bento-context-bg: #227093; /* Darker blue */
+
+  /* Star Card */
+  --star-card-one: #fa8231;
+}
+
+/* ==========================================================================
+   SECTION CONTAINERS - Background separation
+   ========================================================================== */
+
+.dashboard-section {
+  /* background: var(--dashboard-surface-1); */
+  border-radius: var(--dashboard-card-radius);
+  padding: var(--dashboard-card-padding);
+}
+
+.dashboard-section--elevated {
+  background: var(--dashboard-surface-2);
+}
+
+/* ==========================================================================
+   BENTO BLOCK UTILITIES - Khối đồng nhất cho từng row
+   ========================================================================== */
+
+/*
+ * Bento Row: Các blocks trên cùng 1 row phải có height bằng nhau
+ * Sử dụng: thêm class này vào parent grid
+ */
+.bento-row {
+  display: grid;
+  align-items: stretch; /* Đảm bảo các block có height bằng nhau */
+}
+
+/*
+ * Bento Block: Block cơ bản - dùng cho tất cả compartments
+ * - Kế thừa từ dashboard-section
+ * - Thêm min-height để đồng bộ trong row
+ */
+.bento-block {
+  background: var(--sidebar);
+  border-radius: var(--dashboard-card-radius);
+  padding: var(--dashboard-card-padding);
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * Header Row Blocks - Fixed height cho đồng bộ
+ * Welcome + ContextQuickPanel dùng class này
+ * Dùng height thay vì min-height để children kế thừa được
+ */
+.bento-block--header {
+  min-height: 160px; /* Fixed height để children kế thừa */
+}
+
+/*
+ * Bento Block Welcome - Green background
+ */
+.bento-block--welcome {
+  background: var(--bento-welcome-bg);
+  color: var(--bento-welcome-text);
+  /* Enforce centering from CSS */
+  justify-content: center;
+  align-items: center;
+}
+
+.bento-block--welcome h1,
+.bento-block--welcome p,
+.bento-block--welcome span {
+  color: var(--bento-welcome-text);
+}
+
+/*
+ * Bento Block Context - Blue background
+ */
+.bento-block--context {
+  background: var(--bento-context-bg);
+  color: var(--bento-context-text);
+}
+
+.bento-block--context h3,
+.bento-block--context span {
+  color: var(--bento-context-text);
+}
+
+/*
+ * Bento Pattern Overlay - Subtle diagonal lines effect
+ * Dùng position: relative trên parent + ::before pseudo-element
+ */
+.bento-pattern {
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0px 1px,
+    transparent 1px 8px
+  );
+  mask-image: radial-gradient(
+    ellipse 80% 50% at 0% 0%,
+    #000 70%,
+    transparent 155%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Đảm bảo content nằm trên pattern */
+.bento-pattern > * {
+  position: relative;
+  z-index: 2;
+}
+
+/*
+ * Bento Lottie Square - Ô vuông cho animation/image
+ * Dùng calc trực tiếp từ header height
+ */
+.bento-lottie-square {
+  /* Ô vuông: width = height */
+  min-width: 160px;
+  max-width: 260px;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  /* Ko cần aspect-ratio vì đã fix cả 2 chiều */
+}
+
+/*
+ * Bento Item - Các items nhỏ trong block (VD: pills trong ContextQuickPanel)
+ */
+.bento-item {
+  border-radius: 9999px; /* Rounded full - pill style */
+  transition: background-color 150ms ease;
+}
+
+.bento-item:hover {
+  background: var(--dashboard-surface-2);
+}
+
+/* ==========================================================================
+   ANIMATION - Subtle entrance
+   ========================================================================== */
+
+@keyframes dashboard-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-animate-in {
+  animation: dashboard-fade-in 300ms ease-out;
+}
+
+/* ==========================================================================
+   WATERMARK CARDS (ContextQuickPanel Refactor)
+   ========================================================================== */
+
+.watermark-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: white;
+  transition: all 200ms ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.watermark-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Watermark Icon */
+.watermark-icon {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  width: 64px;
+  height: 64px;
+  opacity: 0.15;
+  transform: rotate(-10deg);
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 300ms ease;
+}
+
+.watermark-card:hover .watermark-icon {
+  transform: rotate(0deg) scale(1.1);
+  opacity: 0.2;
+}
+
+/* Variants */
+.watermark-card--drafts {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.watermark-card--appointments {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.watermark-card--pending {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+}
+
+[data-theme='dark'] .watermark-card--drafts {
+  background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+}
+
+[data-theme='dark'] .watermark-card--appointments {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+}
+
+[data-theme='dark'] .watermark-card--pending {
+  background: linear-gradient(135deg, #be123c 0%, #881337 100%);
+}
+
+/* ==========================================================================
+   STAT CARD 3D (Refactor for StatOverview)
+   ========================================================================== */
+
+.stat-card-3d {
+  position: relative;
+  overflow: hidden;
+  /* background removed to allow tailwind override via className */
+  border-radius: 20px; /* More rounded */
+  padding: 24px;
+  transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy effect */
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+}
+
+.stat-card-3d:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08);
+  /* border-color: var(--dashboard-border); */
+  z-index: 10;
+}
+
+/* Background Pattern (Dots) */
+.stat-card-3d-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(to bottom right, black, transparent 80%);
+  pointer-events: none;
+}
+
+/* 3D Icon - Floating Effect */
+.stat-card-3d-icon {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  min-width: 100px;
+  min-height: 100px;
+  max-width: 250px !important;
+  max-height: 250px !important;
+  transform: rotate(-15deg);
+  transition: all 400ms ease;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.stat-card-3d:hover .stat-card-3d-icon {
+  transform: rotate(0deg) scale(1.1) translate(-10px, -10px);
+  opacity: 1;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
+}

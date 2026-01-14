@@ -42,12 +42,12 @@ export function NavItem({
           e.preventDefault();
         }
       }}
-      className={`group focus-visible:ring-ring relative flex items-center rounded-lg p-2 font-normal transition-colors duration-200 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+      className={`group focus-visible:ring-ring relative flex items-center rounded-l-lg p-3 font-normal transition-colors duration-200 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
         isCollapsed ? 'justify-center gap-0' : 'gap-2'
       } ${
         isActive
-          ? 'bg-hover-card! text-sidebar-text-heading cursor-default font-semibold'
-          : 'text-muted-foreground hover:bg-hover-card! hover:text-accent-foreground'
+          ? 'bg-sidebar! text-button-header cursor-default py-4 font-semibold'
+          : 'text-muted-foreground hover:bg-sidebar! hover:text-accent-foreground mr-2! rounded-lg!'
       } `}
       /*
        * MIN-WIDTH để giữ click area khi collapsed.

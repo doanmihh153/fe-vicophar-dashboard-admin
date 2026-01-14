@@ -54,7 +54,7 @@ export function LeftPanelHeader({
        * - Expanded: Hiện (w-auto)
        */}
       <span
-        className={`font-signature text-sidebar-text-heading text-lg whitespace-nowrap transition-all duration-200 lg:text-2xl ${
+        className={`font-display text-button-header text-lg whitespace-nowrap transition-all duration-200 lg:text-2xl ${
           isCollapsed ? 'w-0 overflow-hidden opacity-0' : 'w-auto opacity-100'
         } `}
       >

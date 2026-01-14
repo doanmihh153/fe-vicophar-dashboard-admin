@@ -24,12 +24,9 @@ h6 {
   font-weight: 400;
 }
 
-/* Hide scrollbar globally */
-* {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-*::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
-}
+/*
+ * NOTE: Scrollbar đã được style trong globals.css
+ * Không ẩn hoàn toàn scrollbar vì:
+ * - User desktop dùng chuột cần thấy thanh cuộn
+ * - Xem thêm: DESIGN_CONSTITUTION_V1.md > Scrollbar
+ */

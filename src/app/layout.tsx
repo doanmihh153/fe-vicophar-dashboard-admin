@@ -121,12 +121,7 @@ export default function RootLayout({
          * LƯU Ý: Không có DashboardLayout ở đây!
          * DashboardLayout nằm trong (dashboard)/layout.tsx
          */}
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <DashboardProvider defaultRightPanelMode="notes">
             {/*
              * Children ở đây là route group layouts:

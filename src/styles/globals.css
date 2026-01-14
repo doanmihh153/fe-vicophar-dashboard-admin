@@ -2,7 +2,7 @@
 @import './base.css'; /* Import các style cơ bản cho thẻ HTML (reset, fonts) */
 @import './style.css'; /* Import các style tùy chỉnh riêng của dự án */
 @import 'tw-animate-css'; /* Import thư viện animation (tương tự tailwindcss-animate) */
-
+@import './home-dashboard.css';
 /* 
   Định nghĩa variant 'dark' cho chế độ tối. 
   Kích hoạt khi class 'dark' xuất hiện ở thẻ cha (thường là thẻ html).
@@ -204,7 +204,7 @@
     @apply border-border outline-ring/50; /* Mặc định mọi border dùng màu border */
   }
   body {
-    @apply bg-background text-foreground; /* Body dùng background và màu chữ chuẩn */
+    @apply bg-background text-foreground transition-colors duration-300; /* Body dùng background và màu chữ chuẩn */
   }
 }
 
@@ -239,4 +239,17 @@
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+}
+
+/* 
+  UTILITY CLASS: Hide Scrollbar 
+  Dùng để ẩn thanh cuộn nhưng vẫn giữ chức năng cuộn.
+*/
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
