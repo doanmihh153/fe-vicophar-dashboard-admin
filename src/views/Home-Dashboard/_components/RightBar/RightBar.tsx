@@ -78,7 +78,7 @@ export function RightBar({ items: initialItems, isLoading }: RightBarProps) {
 
       {/* SECTION 2: CALENDAR */}
       <div className="mt-2">
-        <CalendarPanel />
+        <CalendarPanel isLoading={isLoading} />
       </div>
 
       {/* POPUP OVERLAY */}

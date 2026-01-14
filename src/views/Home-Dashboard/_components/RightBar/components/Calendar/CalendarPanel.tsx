@@ -14,6 +14,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 // =============================================================================
 // CONSTANTS
@@ -122,7 +123,11 @@ function isSameDay(date1: Date, date2: Date): boolean {
 // COMPONENT
 // =============================================================================
 
-export function CalendarPanel() {
+interface CalendarPanelProps {
+  isLoading?: boolean;
+}
+
+export function CalendarPanel({ isLoading = false }: CalendarPanelProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -151,6 +156,27 @@ export function CalendarPanel() {
   // Format: "Tháng 8, 2021"
   const monthLabel = currentDate.toLocaleDateString('vi-VN', { month: 'long' });
   const yearLabel = currentDate.getFullYear();
+
+  if (isLoading) {
+    return (
+      <div className="dashboard-section bg-sidebar p-5">
+        <div className="mb-6 flex justify-between">
+          <Skeleton className="h-6 w-32 rounded-lg" />
+          <div className="flex gap-1">
+            <Skeleton className="h-7 w-7 rounded-full" />
+            <Skeleton className="h-7 w-7 rounded-full" />
+          </div>
+        </div>
+        <div className="grid grid-cols-7 gap-y-3">
+          {Array.from({ length: 7 * 5 }).map((_, i) => (
+            <div key={i} className="flex justify-center">
+              <Skeleton className="h-8 w-8 rounded-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-section bg-sidebar p-5">
