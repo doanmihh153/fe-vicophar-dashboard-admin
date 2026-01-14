@@ -52,7 +52,8 @@ export function ContentCard({ item, rank }: ContentCardProps) {
           title={item.title}
           subtitle={item.category}
           image={item.thumbnail}
-          aspectRatio="2/1"
+          aspectRatio="custom"
+          className="min-h-[200px] w-full"
           badge={Badge}
         >
           {/* Slot Footer: Hiển thị nhanh số liệu (Views + Time) */}

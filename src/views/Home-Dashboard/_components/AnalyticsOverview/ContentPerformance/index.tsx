@@ -56,7 +56,7 @@ export function ContentPerformance({
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-[200px] w-full rounded-2xl" />
+              <Skeleton key={i} className="h-[240px] w-full rounded-2xl" />
             ))
           : items
               ?.slice(0, 4)

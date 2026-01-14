@@ -30,8 +30,8 @@ interface VisualCardProps extends React.HTMLAttributes<HTMLDivElement> {
   image?: string;
 
   // --- Visual Props ---
-  /** Tỷ lệ khung hình. Default: 2/1 (Cinematic w/ request) */
-  aspectRatio?: '2/1' | 'video' | 'square' | 'portrait';
+  /** Tỷ lệ khung hình. Default: 2/1 (Cinematic w/ request). 'custom' = tắt aspect-ratio để set h/w thủ công. */
+  aspectRatio?: '2/1' | 'video' | 'square' | 'portrait' | '3/2' | 'custom';
   /** Tối ưu hiển thị text (Light on Dark hoặc Dark on Light) */
   variant?: 'dark' | 'light';
 
@@ -55,27 +55,35 @@ export function VisualCard({
   ...props
 }: VisualCardProps) {
   // Map Aspect Ratio -> Tailwind Classes
+  // NOTE: Sử dụng aspect-ratio class của Tailwind
   const aspectClass = {
     '2/1': 'aspect-[2/1]',
     video: 'aspect-video',
     square: 'aspect-square',
     portrait: 'aspect-[1/2]',
+    '3/2': 'aspect-[3/2]',
+    custom: '',
   }[aspectRatio];
 
   return (
     <div
       className={cn(
-        'group relative w-full cursor-pointer overflow-hidden rounded-2xl',
+        // GRID STACKING LAYOUT:
+        // - display: grid -> Cho phép stack các layers lên nhau
+        // - place-items: stretch -> Fill toàn bộ không gian
+        'group relative grid w-full cursor-pointer overflow-hidden rounded-2xl',
         aspectClass,
         className
       )}
       {...props}
     >
       {/*
-       * 1. BACKGROUND LAYER
+       * 1. BACKGROUND LAYER (Image)
+       * - Grid Area: 1 / 1 / -1 / -1 (Chiếm toàn bộ ô grid)
+       * - Z-index: Default (0)
        */}
       {image && (
-        <div className="absolute inset-0 h-full w-full select-none">
+        <div className="col-start-1 row-start-1 h-full w-full">
           <Image
             src={image}
             alt={title}
@@ -88,10 +96,12 @@ export function VisualCard({
       )}
 
       {/*
-       * 2. CONTENT LAYER (Z-10)
-       * Layout: Flex Column, Justify Space-Between
+       * 2. CONTENT LAYER
+       * - Grid Area: 1 / 1 / -1 / -1 (Stack lên trên Image)
+       * - Z-index: 10
+       * - Layout: Flex Column, Justify Space-Between
        */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-between p-5 md:p-6">
+      <div className="z-10 col-start-1 row-start-1 flex flex-col justify-between p-5 md:p-6">
         {/* Header: Badge or Empty */}
         <div className="flex items-start justify-between">
           <div className="flex flex-col items-start gap-1">
