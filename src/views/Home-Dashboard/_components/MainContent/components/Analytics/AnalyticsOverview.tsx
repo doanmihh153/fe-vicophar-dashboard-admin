@@ -21,7 +21,10 @@
  */
 
 import React from 'react';
-import type { GAPerformanceData, ContentPerformanceItem } from '../../_data';
+import type {
+  GAPerformanceData,
+  ContentPerformanceItem,
+} from '../../../../_data';
 import { TrafficOverview } from './TrafficOverview';
 import { ContentPerformance } from './ContentPerformance';
 

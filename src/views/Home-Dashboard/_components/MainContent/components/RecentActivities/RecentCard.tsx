@@ -20,11 +20,11 @@ import {
   PreviewCardPositioner,
   PreviewCardPopup,
 } from '@/components/ui/preview-card';
-import type { RecentContentItem } from '../../_data';
+import type { RecentContentItem } from '../../../../_data';
 import { AppleGridCard } from '@/components/custom/AppleGridCard';
 import { cn } from '@/lib/utils';
 import { Eye, Clock, FileText, ShoppingBag, Newspaper } from 'lucide-react';
-import { formatRelativeTime } from '../../_utils';
+import { formatRelativeTime } from '../../../../_utils';
 
 interface RecentCardProps {
   item: RecentContentItem;

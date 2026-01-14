@@ -20,7 +20,7 @@
 import React from 'react';
 import { FileEdit, Calendar, Clock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/Skeleton';
-import type { UserContext } from '../../_data';
+import type { UserContext } from '../../../../_data';
 
 // =============================================================================
 // TYPES

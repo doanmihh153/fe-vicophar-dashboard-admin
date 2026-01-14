@@ -25,7 +25,7 @@ import React from 'react';
 import { RecentCard } from './RecentCard';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { cn } from '@/lib/utils';
-import type { RecentContentItem } from '../../_data';
+import type { RecentContentItem } from '../../../../_data';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // =============================================================================

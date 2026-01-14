@@ -20,7 +20,7 @@
 import React from 'react';
 import { WelcomeSection } from './WelcomeSection';
 import { ContextQuickPanel } from './ContextQuickPanel';
-import type { UserContext } from '../../_data';
+import type { UserContext } from '../../../../_data';
 
 // =============================================================================
 // TYPES

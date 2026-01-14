@@ -8,9 +8,9 @@ import {
   PreviewCardPositioner,
   PreviewCardPopup,
 } from '@/components/ui/preview-card';
-import type { ContentPerformanceItem } from '../../../_data';
+import type { ContentPerformanceItem } from '../../../../../_data';
 import { Eye, Clock } from 'lucide-react';
-import { formatNumber } from '../../../_utils';
+import { formatNumber } from '../../../../../_utils';
 import { VisualCard } from '@/components/custom/VisualCard';
 import { cn } from '@/lib/utils';
 

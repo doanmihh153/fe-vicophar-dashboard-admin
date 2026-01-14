@@ -30,14 +30,8 @@ import { useDashboardData } from './_hooks';
 // Import CSS riêng cho Dashboard
 // import './home-dashboard.css';
 
-// Import tất cả components
-import {
-  HomeMainHeader,
-  StatOverview,
-  RecentContent,
-  AnalyticsOverview,
-  RightBarContent,
-} from './_components';
+// Import Components
+import { MainContent, RightBarContent } from './_components';
 
 // =============================================================================
 // COMPONENT
@@ -53,48 +47,9 @@ export function DashboardHomePage() {
        * =====================================================
        * MAIN CONTENT AREA
        * =====================================================
-       * Layout với section stacking rõ ràng
-       * Mỗi section có background separation
        */}
-      <div className="p-2">
-        <div className="space-y-4">
-          {/*
-           * ===============================================
-           * ROW 1: Main Header (Welcome + Context Panel)
-           * ===============================================
-           */}
-          <HomeMainHeader
-            userContext={data?.userContext}
-            isLoading={isLoading}
-          />
-
-          {/*
-           * ===============================================
-           * ROW 2: Stat Overview (Grid 4 cột với icons)
-           * ===============================================
-           * Mỗi card có rounded corners và background
-           */}
-          <StatOverview stats={data?.stats} isLoading={isLoading} />
-
-          {/*
-           * ===============================================
-           * ROW 3: Analytics (Full-width với charts)
-           * ===============================================
-           * 3 columns: Bar Chart + Donut + Top Content
-           */}
-          <AnalyticsOverview
-            gaPerformance={data?.gaPerformance}
-            contentPerformance={data?.contentPerformance}
-            isLoading={isLoading}
-          />
-
-          {/*
-           * ===============================================
-           * ROW 4: Recent Content
-           * ===============================================
-           */}
-          <RecentContent items={data?.recentContent} isLoading={isLoading} />
-        </div>
+      <div className="col-span-12 lg:col-span-9">
+        <MainContent data={data} isLoading={isLoading} />
       </div>
 
       {/*

@@ -14,7 +14,7 @@
 'use client';
 
 import React from 'react';
-import type { ContentPerformanceItem } from '../../../_data';
+import type { ContentPerformanceItem } from '../../../../../_data';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ContentCard } from './ContentCard';
 import { ArrowRight } from 'lucide-react';

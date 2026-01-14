@@ -1,7 +1,7 @@
 import React from 'react';
 import { Newspaper, FileText, Package, FileEdit } from 'lucide-react';
 import { MetricCard3D } from '@/components/custom/MetricCard3D';
-import { STAT_PLACEHOLDERS, type StatItem } from '../../_data';
+import { STAT_PLACEHOLDERS, type StatItem } from '../../../../_data';
 
 // =============================================================================
 // TYPES

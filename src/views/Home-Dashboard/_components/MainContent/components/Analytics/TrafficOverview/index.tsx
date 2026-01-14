@@ -25,10 +25,11 @@
 
 import React from 'react';
 import { TrafficLineChart } from './TrafficLineChart';
-import type { GAPerformanceData } from '../../../_data';
+import type { GAPerformanceData } from '../../../../../_data';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { formatNumber } from '../../../_utils';
+
+import { formatNumber } from '../../../../../_utils';
 
 // =============================================================================
 // TYPES

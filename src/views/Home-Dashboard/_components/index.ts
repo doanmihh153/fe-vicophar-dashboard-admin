@@ -5,44 +5,22 @@
  *
  * MÔ TẢ:
  *   Export tập trung cho tất cả components của Home Dashboard.
- *   Import từ file này thay vì import trực tiếp từ từng folder.
  *
  * CẤU TRÚC:
- *   - HomeMainHeader: Welcome + Context Panel
- *   - StatOverview: Grid 4 cột thống kê
- *   - RecentContent: Danh sách nội dung gần đây
- *   - AnalyticsOverview: Thống kê analytics đơn giản
+ *   - MainContent: Cột trái (Header, Stats, Analytics, Recent)
  *   - RightBar: Sidebar phải (Task + Calendar)
  *
  * =============================================================================
  */
 
 // =============================================================================
-// HOME MAIN HEADER
+// MAIN CONTENT (NEW STRUCTURE)
 // =============================================================================
-export { HomeMainHeader } from './HomeMainHeader';
-export { WelcomeSection } from './HomeMainHeader';
-export { ContextQuickPanel } from './HomeMainHeader';
-
-// =============================================================================
-// STAT OVERVIEW
-// =============================================================================
-export { StatOverview } from './StatOverview';
-
-// =============================================================================
-// RECENT CONTENT
-// =============================================================================
-export { RecentContent } from './RecentContent';
-
-// =============================================================================
-// ANALYTICS OVERVIEW
-// =============================================================================
-export { AnalyticsOverview } from './AnalyticsOverview';
+export { MainContent } from './MainContent';
 
 // =============================================================================
 // RIGHT BAR CONTENT (NEW STRUCTURE)
 // =============================================================================
 export { RightBar as RightBarContent } from './RightBar';
 
-// Backup old exports if needed, but we are replacing them:
-// export { DraggableItemList } from './RightBarContent'; // REMOVED to enforce encapsulation
+// Export legacy (if any) or shared types here if needed
