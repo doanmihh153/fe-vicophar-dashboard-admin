@@ -114,6 +114,7 @@ export function TrafficLineChart({
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
         />
 
         {/* Hover Interaction Layer */}

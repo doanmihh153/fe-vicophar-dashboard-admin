@@ -43,21 +43,22 @@ export function AppleGridCard({
   return (
     <div
       className={cn(
-        'group bg-background text-foreground relative h-full w-full overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02]',
+        // GRID STACKING LAYOUT:
+        'group bg-background text-foreground relative grid h-full w-full overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02]',
         className
       )}
       {...props}
     >
       {/*
        * 1. BACKGROUND LAYER
-       * Gradient nhẹ để text dễ đọc
        */}
-      <div className="bg-background absolute inset-0 z-0" />
+      <div className="bg-background z-0 col-start-1 row-start-1" />
 
       {/*
        * 2. CONTENT LAYER (Top)
+       * - Stack lên trên cùng
        */}
-      <div className="relative z-20 flex h-full flex-col p-6">
+      <div className="z-20 col-start-1 row-start-1 flex h-full flex-col p-6">
         {/* Header: Subtitle + Title */}
         <div className="flex flex-col items-start gap-1">
           <span className="text-xs font-semibold tracking-widest uppercase">
@@ -80,7 +81,7 @@ export function AppleGridCard({
 
       {/*
        * 3. IMAGE LAYER (Bottom / Background)
-       * Mask gradient để hòa trộn với nền đen
+       * - Revert to Absolute: Bottom Half Design
        */}
       <div className="absolute top-1/2 right-0 bottom-0 left-0 z-10 transition-transform duration-700 ease-out group-hover:scale-105">
         <div className="relative h-full w-full">
@@ -88,11 +89,11 @@ export function AppleGridCard({
             src={image}
             alt={title}
             fill
-            className="aspect-2/1 object-cover object-center opacity-90"
+            className="aspect-3/2 object-cover object-center opacity-90"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           {/* Gradient Overlay: Fade to Black at top */}
-          <div className="from-background absolute inset-0 bg-linear-to-b via-transparent to-transparent" />
+          <div className="from-background absolute -inset-1 bg-linear-to-b via-transparent to-transparent" />
         </div>
       </div>
     </div>
